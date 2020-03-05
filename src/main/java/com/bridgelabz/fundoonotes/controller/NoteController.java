@@ -53,6 +53,20 @@ public class NoteController {
 	
  
 	@GetMapping("/readall")
-	public ResponseEntity<UserResponse> 
+	public ResponseEntity<UserResponse> getallnotes() throws Exception
+	{
+		try {
+		List<Note> note = noteservice.getAllNotes();
+		if(note != null)
+		{
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "notes can be viewd")); 
+		}
+		}
+		catch (Exception e) {
+			 System.out.println("there is some error-----");
+		}
+		 return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UserResponse(401, "note can not be viewed"));
+
+	}
 	 
 }
