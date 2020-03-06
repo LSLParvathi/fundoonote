@@ -5,6 +5,9 @@ import java.util.List;
 import java.util.Set;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
@@ -22,21 +25,25 @@ public class User {
 	 * 
 	 */
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Long id;
-
+	@NotNull(message="firstname is required")
 	private String firstname;
-
+	@NotNull(message = "lastname is required")
 	private String lastname;
-
+	@NotNull(message = "mobilenumber is required")
+	@Size(min=10, max=10)
 	private String mobilenumber;
-
+	@Email(message = "email is required")
 	private String email;
-
+	@NotNull(message = "password is required") 
 	private String password;
 
 	private Boolean verify = false;
 
-	private LocalDateTime date;
+	private LocalDateTime createdate;
+
+	private LocalDateTime updatedate;
 
 	public Boolean getVerify() {
 		return verify;
@@ -93,23 +100,9 @@ public class User {
 	public void setPassword(String password) {
 		this.password = password;
 	}
+  
 
-	public LocalDateTime getDate() {
-		return date;
-	}
-
-	public void setDate(LocalDateTime date) {
-		this.date = date;
-	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", mobilenumber="
-				+ mobilenumber + ", email=" + email + ", password=" + password + ", verify=" + verify + ", date=" + date
-				+ "]";
-	}
-
-	@OneToMany(cascade = CascadeType.ALL )
+	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
 	private List<Note> note;
 
@@ -120,5 +113,29 @@ public class User {
 	public void setNote(List<Note> note) {
 		this.note = note;
 	}
+
+	public LocalDateTime getCreatedate() {
+		return createdate;
+	}
+
+	public void setCreatedate(LocalDateTime createdate) {
+		this.createdate = createdate;
+	}
+
+	public LocalDateTime getUpdatedate() {
+		return updatedate;
+	}
+
+	public void setUpdatedate(LocalDateTime updatedate) {
+		this.updatedate = updatedate;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", mobilenumber="
+				+ mobilenumber + ", email=" + email + ", password=" + password + ", verify=" + verify + ", createdate="
+				+ createdate + ", updatedate=" + updatedate + ", note=" + note + "]";
+	}
+	
 
 }

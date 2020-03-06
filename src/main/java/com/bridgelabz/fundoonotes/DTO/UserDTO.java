@@ -10,6 +10,7 @@ import lombok.Data;
 @Component
 public class UserDTO 
 {
+
 	private String firstname;
 	private String lastname;
 	private String mobilenumber;

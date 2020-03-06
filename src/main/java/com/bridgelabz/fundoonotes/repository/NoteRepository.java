@@ -18,12 +18,11 @@ public class NoteRepository {
 
 	@Autowired
 	private EntityManager entitymanager;
-	 
 
 	public void saveNote(Note note) {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		  currentsession.save(note);
-		  
+		currentsession.save(note);
+
 	}
 
 	public List<Note> getAllNotes() {
@@ -36,5 +35,12 @@ public class NoteRepository {
 	public boolean verify(Long id) {
 
 		return true;
+	}
+
+	public Note getbyId(Long note_id) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		Note note = currentsession.get(Note.class, note_id);
+		return note;
+
 	}
 }

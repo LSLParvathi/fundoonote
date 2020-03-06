@@ -47,7 +47,7 @@ public class NoteServiceImp implements NoteService {
 
 			return note;
 		} else {
-			return note;
+			return null;
 		}
 
 	}
@@ -55,6 +55,18 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public List<Note> getAllNotes() {
 		return noterepository.getAllNotes();
+	}
+
+	@Override
+	public Note get(Long note_id) {
+		return noterepository.getbyId(note_id);
+		 
+	}
+
+	@Override
+	public void delete(Long note_id) {
+		 
+		
 	}
 
 }
