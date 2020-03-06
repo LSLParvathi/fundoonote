@@ -10,8 +10,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.bridgelabz.fundoonotes.DTO.Updatepassword;
 import com.bridgelabz.fundoonotes.DTO.UserDTO;
 import com.bridgelabz.fundoonotes.DTO.UserInformation;
+import com.bridgelabz.fundoonotes.DTO.updateInformation;
 import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
@@ -32,8 +34,8 @@ public class UserServiceImp implements UserService {
 	private JWToperations ope;
 	@Autowired
 	private JMSoperations ope1;
-	 
 
+	@Transactional
 	@Override
 	public User register(UserDTO userdto) {
 		User user = new User();
@@ -45,70 +47,94 @@ public class UserServiceImp implements UserService {
 			BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 			String newpwd = by.encode(user.getPassword());
 			user.setPassword(newpwd);
-
 			user.setCreatedate(LocalDateTime.now());
 			user.setUpdatedate(LocalDateTime.now());
 			user.setVerify(false);
-
 			userrepository.save(user);
-
 			String str = "http://localhost:8080/verify/" + ope.JWTToken(user.getId());
 			ope1.sendEmail(user.getEmail(), "Verify Email", str);
-
 			return user;
 		}
 	}
 
 	@Override
 	public User userlogin(UserInformation userinformation) {
-		User user = userrepository.IfEmailExists(userinformation.getEmail()).orElseThrow(() ->new UserExceptions(null, 404, "email does not exists"));
+		User user = userrepository.IfEmailExists(userinformation.getEmail())
+				.orElseThrow(() -> new UserExceptions(null, 404, "email does not exists"));
 		String password = userinformation.getPassword();
-		System.out.println("password is: "+password);
 		String newpassword = user.getPassword();
 		BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 		boolean c = by.matches(password, newpassword);
-		System.out.println("c is: "+c);
-		if ( c ==  true)
-		{
+		if (c == true) {
 			return user;
-		 
-		}
-		else {
+		} else {
 			throw new UserExceptions(null, 404, "password is incorrect");
-		} 
+		}
 	}
-}
-//		if (userrepository.IfEmailExists(user.getEmail()) == null) {
-//			System.out.println("email does note exists");
-//			String newpwd = by.encode(user.getPassword());
-//			System.out.println("old password is: " + user.getPassword());
-//			System.out.println("new password is: " + newpwd);
-//			System.out.println("id is: " + user.getId());
-//			user.setPassword(newpwd);
-//			userrepository.save(user);
-//			String str = "http://localhost:8080/verify/" + ope.JWTToken(user.getId());
-//			ope1.sendEmail(user.getEmail(), "Verify Email", str);
-//			return user;
-//		} else {
-//			System.out.println("returning null---");
-//			return null;
-//		}
 
-//	@Override
-//	public List<User> get() {
-//		return userrepository.get();
-//	}
-//
-//	 
-//	@Override
-//	public User get(Long id) {
-//		return userrepository.get(id);
-//	}
-//
-//	 
-//
-//	 
-//	@Override
-//	public void delete(Long id) {
-//		userrepository.delete(id);
-//	}
+	@Override
+	public User getall() {
+		User user = userrepository.get().orElseThrow(() -> new UserExceptions(null, 404, "no data is existing"));
+		return user;
+	}
+
+	@Override
+	public User getUserById(Long id) {
+		User user = userrepository.get(id).orElseThrow(() -> new UserExceptions(null, 404, "no data is existing"));
+		return user;
+	}
+
+	@Transactional
+	@Override
+	public User verifyUser(String token) {
+		Long id = ope.parseJWT(token);
+		User user = getUserById(id);
+		user.setVerify(true);
+		userrepository.saveUser(user);
+		return user;
+	}
+
+	@Transactional
+	@Override
+	public User updateuser(updateInformation updateinformation, Long id) {
+		User user = getUserById(id);
+		BCryptPasswordEncoder by = new BCryptPasswordEncoder();
+		String newpwd = by.encode(updateinformation.getPassword());
+		user.setPassword(newpwd);
+		user.setMobilenumber(updateinformation.getPhonenumber());
+		user.setUpdatedate(LocalDateTime.now());
+		userrepository.saveUser(user);
+		return user;
+	}
+
+	@Transactional
+	@Override
+	public void deleteUser(Long id) {
+		User user = getUserById(id);
+		userrepository.deleteUser(user);
+		
+	}
+	@Transactional
+	@Override
+	public User setnewpassword(Updatepassword updatepassword, Long id) {
+		String s1 = updatepassword.getConfirmpassword();
+		System.out.println("s1 is: "+s1);
+		System.out.println("id is: "+id);
+		User user = getUserById(id);
+		System.out.println("user is: "+user);
+		 
+		if((updatepassword.getSetpassword()).equals(s1)) {
+			BCryptPasswordEncoder by = new BCryptPasswordEncoder();
+			String newpwd = by.encode(s1);
+			user.setPassword(newpwd);
+			userrepository.saveUser(user);
+			System.out.println("user is: "+user);
+			return user; 
+		}
+		 return null;
+		 
+	}
+
+}
+
+ 

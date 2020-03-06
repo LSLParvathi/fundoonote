@@ -29,7 +29,7 @@ import com.bridgelabz.fundoonotes.utilis.JWToperations;
 public class UserRepository {
 	@Autowired
 	private EntityManager entitymanager;
-	 
+
 	public void save(User user) {
 		Session currentsession = entitymanager.unwrap(Session.class);
 		currentsession.saveOrUpdate(user);
@@ -37,55 +37,37 @@ public class UserRepository {
 
 	public Optional<User> IfEmailExists(String email) {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from User where email=:email").setParameter("email", email).uniqueResultOptional();
+		return currentsession.createQuery("from User where email=:email").setParameter("email", email)
+				.uniqueResultOptional();
 
 	}
 
-	public Optional<User> checkuser(String email,String password ) {
+	public Optional<User> checkuser(String email, String password) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		return currentsession.createQuery("from User where email=:email").setParameter("email", email)
+				.uniqueResultOptional();
+	}
+
+	public Optional<User> get() {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		return currentsession.createQuery("from User").uniqueResultOptional();
+
+	}
+
+	public Optional<User> get(Long id) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		return currentsession.createQuery("from User where id=:id").setParameter("id", id).uniqueResultOptional();
+
+	}
+
+	public void saveUser(User user) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		currentsession.saveOrUpdate(user);
+	}
+
+	public void deleteUser(User user) {
 		Session currentsession = entitymanager.unwrap(Session.class); 
-		return currentsession.createQuery("from User where email=:email").setParameter("email", email).uniqueResultOptional();
-		}
-		 
-
-	/*
-	 * public List<User> get() { Session currentsession =
-	 * entitymanager.unwrap(Session.class); Query<User> query =
-	 * currentsession.createQuery("from User", User.class); List<User> list =
-	 * query.getResultList(); return list;
-	 * 
-	 * }
-	 * 
-	 * public User get(Long id) { Session currentsession =
-	 * entitymanager.unwrap(Session.class); User userobj =
-	 * currentsession.get(User.class, id); return userobj; }
-	 * 
-	 * 
-	 * 
-	 * public void delete(long id) { Session currentsession =
-	 * entitymanager.unwrap(Session.class); User userobj =
-	 * currentsession.get(User.class, id); currentsession.delete(userobj); }
-	 * 
-	 * public boolean verify(Long id) {
-	 * 
-	 * System.out.println("check here"); List<User> users = get(); for (User b :
-	 * users) { if (b.getId() == id) { return true; } } return false;
-	 * 
-	 * }
-	 * 
-	 * 
-	 * public int getbyemail(String email) { Session currentsession =
-	 * entitymanager.unwrap(Session.class); Query<User> query = currentsession.
-	 * createQuery("from User where email = 'managalagirileela1997@gmail.com'",User.
-	 * class); List<User> list = query.getResultList(); for (User s : list) {
-	 * return(s.getId()); } return 0; }
-	 * 
-	 * 
-	 * public boolean verify(String email) { return true; }
-	 */
-
-	public boolean verify(Long id) {
-		// TODO Auto-generated method stub
-		return true;
+		currentsession.delete(user);
 	}
 
 }

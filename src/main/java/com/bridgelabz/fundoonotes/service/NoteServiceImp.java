@@ -35,7 +35,7 @@ public class NoteServiceImp implements NoteService {
 		// user = userrepository.get(id);
 		// System.out.println(user.getId() + "check here");
 		System.out.println("the details are: " + notedto.getDescription() + " " + notedto.getTitle());
-		if (userrepository.verify(id) == true) {
+		if (userrepository.get(id) != null) {
 			BeanUtils.copyProperties(notedto, note);
 			note.setArchive("yes");
 			note.setColours("blue");

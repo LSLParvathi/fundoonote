@@ -22,9 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.auth0.jwt.interfaces.Verification;
-
+import com.bridgelabz.fundoonotes.DTO.Updatepassword;
 import com.bridgelabz.fundoonotes.DTO.UserDTO;
 import com.bridgelabz.fundoonotes.DTO.UserInformation;
+import com.bridgelabz.fundoonotes.DTO.updateInformation;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.utilis.UserResponse;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
@@ -44,6 +45,8 @@ public class UserController {
 	private UserRepository userrepository;
 	@Autowired
 	private User user;
+	@Autowired
+	private JWToperations ope;
 
 	@PostMapping("/register")
 	public ResponseEntity<UserResponse> register(@RequestBody UserDTO userdto) {
@@ -51,20 +54,11 @@ public class UserController {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "successfully registered"));
 	}
 
-	/*
-	 * @GetMapping("/verify/{token}") public ResponseEntity<UserResponse>
-	 * VerificationUser(@PathVariable("token") String token) throws Exception {
-	 * 
-	 * UserRepository userrepository = new UserRepository(); JWToperations ope = new
-	 * JWToperations(); Long id = ope.parseJWT(token); User user =
-	 * userservice.get(id); if (userrepository.verify(id) == true) {
-	 * user.setVerify(true); //update(user); return
-	 * ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(token, 200,
-	 * "verified")); } return ResponseEntity.status(HttpStatus.ACCEPTED).body(new
-	 * UserResponse(token, 401, "not verified"));
-	 * 
-	 * }
-	 */
+	@GetMapping("/verify/{token}")
+	public ResponseEntity<UserResponse> VerificationUser(@PathVariable("token") String token) throws Exception { 
+  	User user = userservice.verifyUser(token);
+			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "verified"));
+		 }
 
 	@PostMapping("/login")
 	public ResponseEntity<UserResponse> login(@RequestBody UserInformation userinformation) {
@@ -73,54 +67,40 @@ public class UserController {
 
 	}
 
-//	@GetMapping("/getall")
-//	public ResponseEntity<UserResponse> get() {
-//		List<User> user = userservice.get();
-//		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "note is added"));
-//
-//	}
-//
-//	@GetMapping("/get/{id}")
-//	public User get(@PathVariable Long id) {
-//		User userobj = userservice.get(id);
-//		if (userobj == null) {
-//			throw new RuntimeException("User with such id: " + id + " does not exist.");
-//		}
-//		return userobj;
-//
-//	}
-//
-////	@PostMapping("/register")
-////	public User save(@RequestBody UserDTO userdto) {
-////
-////		User user = new User();
-////		BeanUtils.copyProperties(userdto, user);
-////		user.setDate(LocalDateTime.now());
-////		user.setVerify(false);
-////		userservice.save(user);
-////		String str = "http://localhost:8080/verify/" + ope.JWTToken(user.getId());
-////		ope.sendEmail(user.getEmail(), "Verify Email", str);
-////		return user;
-////	}
-//
+	@GetMapping("/getall")
+	public ResponseEntity<UserResponse> getallusers() {
+		User user = userservice.getall();
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "current users list"));
 
-//
-//	@DeleteMapping("/delete/{id}")
-//	public String delete(@PathVariable Long id) {
-//		userservice.delete(id);
-//		return "the user with id " + id + " has been deleted.";
-//	}
-//
-//	/*
-//	 * @PutMapping("/upd") public User update(@RequestBody User user) {
-//	 * user.setDate(LocalDateTime.now()); user.setVerify(true);
-//	 * userservice.save(user); System.out.println(user.getEmail() + "--" +
-//	 * user.getFirstname() + " ----" + user.getLastname() + "---" + user.getId() +
-//	 * "---" + user.getDate() + "----" + user.getVerify()); userservice.save(user);
-//	 * return user;
-//	 * 
-//	 * }
-//	 */
+	}
+
+	@GetMapping("/get/{id}")
+	public ResponseEntity<UserResponse> get(@PathVariable Long id) {
+		User userobj = userservice.getUserById(id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(userobj, 200, "user list"));
+	}
+
+	@PutMapping("/updateuser/{id}")
+	public ResponseEntity<UserResponse> update(@RequestBody updateInformation updateinformation,@PathVariable Long id) {
+		User user = userservice.updateuser(updateinformation,id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "successfully updated"));
+   
+	}
+
+ 
+ 	@DeleteMapping("/delete/{id}")
+ 	public ResponseEntity<UserResponse> delete(@PathVariable Long id) {
+ 		userservice.deleteUser(id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200,  "the user with id " + id + " has been deleted."));
+  }
+ 
+ 	@GetMapping("/forgotpassword/{id}")
+	public ResponseEntity<UserResponse>  setpassword(@RequestBody Updatepassword  updatepassword,@PathVariable Long id) {
+ 		User user = userservice.setnewpassword(updatepassword,id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "new password has been set"));
+
+ 	}
+
 //
 //	/*
 //	 * @PutMapping("/forgot/{id}") public String setnewpassword(@PathVariable Long
