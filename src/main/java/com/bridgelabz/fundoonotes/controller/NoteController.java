@@ -1,6 +1,7 @@
 package com.bridgelabz.fundoonotes.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,10 +10,12 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
+import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
@@ -29,47 +32,33 @@ public class NoteController {
 
 	@PostMapping("/createnote/{token}")
 	public ResponseEntity<UserResponse> AddNote(@PathVariable("token") String token, @RequestBody NoteDto notedto) {
-
-		Note n = noteservice.createNote(token, notedto);
-
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(n, 200, "note is added"));
+		Note note = noteservice.createNote(token, notedto);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "New note is created"));
 
 	}
 
-	@GetMapping("/readall")
-	public ResponseEntity<UserResponse> getallNotes() throws Exception {
-		try {
-			List<Note> note = noteservice.getAllNotes();
-			if (note != null) {
-				return ResponseEntity.status(HttpStatus.ACCEPTED)
-						.body(new UserResponse(note, 200, "notes can be viewd"));
-			}
-		} catch (Exception e) {
-			System.out.println("there is some error-----");
-		}
-		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UserResponse(401, "note can not be viewed"));
-
+	@GetMapping("/getall")
+	public ResponseEntity<UserResponse> getallNotes() {
+		Optional<List<Note>> note = noteservice.getAllNotes();
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "current notes list"));
 	}
 
 	@GetMapping("/get/{note_id}")
 	public ResponseEntity<UserResponse> get(@PathVariable Long note_id) {
-		try {
-			Note note = noteservice.get(note_id);
-			if (note != null) {
-				return ResponseEntity.status(HttpStatus.ACCEPTED)
-						.body(new UserResponse(note, 200, "note can be viewed"));
-			}
-		} catch (Exception e) {
-			System.out.println("data with this id does not exist");
-		}
-		return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UserResponse(401, "note can't be viewed"));
-
+		Note note = noteservice.getNoteById(note_id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "view note"));
 	}
 
 	@DeleteMapping("/delete/{note_id}")
 	public ResponseEntity<UserResponse> delete(@PathVariable Long note_id) {
-		return null;
+		noteservice.deleteNote(note_id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Note is Deleted"));
+	}
 
+	@PutMapping("/updateNote/{note_id}")
+	public ResponseEntity<UserResponse> updateNote(@PathVariable Long note_id,@RequestBody UpdateNote updatenote) {
+		Note note = noteservice.updatenote(note_id,updatenote);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note list is updated"));
 	}
 
 }

@@ -133,7 +133,7 @@ public class UserServiceImp implements UserService {
 	}
 
 	private User getUserByMail(String mail) {
-		User user = userrepository.getUserByMail(mail).orElseThrow(() -> new UserExceptions(null, 404, "no data is existing"));
+		User user = userrepository.getUserByMail(mail).orElseThrow(() -> new UserExceptions(null, 404, "no such user exists"));
 		return user;
 	}
 

@@ -99,21 +99,7 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	}
-  
-
-	@OneToMany(cascade = CascadeType.ALL)
-	@JoinColumn(name = "id")
-	private List<Note> note;
-
-	public List<Note> getNote() {
-		return note;
-	}
-
-	public void setNote(List<Note> note) {
-		this.note = note;
-	}
-
+	} 
 	public LocalDateTime getCreatedate() {
 		return createdate;
 	}
@@ -136,6 +122,19 @@ public class User {
 				+ mobilenumber + ", email=" + email + ", password=" + password + ", verify=" + verify + ", createdate="
 				+ createdate + ", updatedate=" + updatedate + ", note=" + note + "]";
 	}
-	
+
+	@OneToMany(cascade = CascadeType.ALL)
+	@JoinColumn(name = "id")
+	private List<Note> note;
+
+	public List<Note> getNote() {
+		return note;
+	}
+
+	public void setNote(List<Note> note) {
+		this.note = note;
+	}
+
+	 
 
 }

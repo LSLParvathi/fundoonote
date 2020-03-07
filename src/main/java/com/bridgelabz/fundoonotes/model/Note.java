@@ -15,11 +15,11 @@ import lombok.Data;
 @Component
 @Data
 @Entity
-@Table(name = "note1")
+@Table(name = "notetable")
 public class Note {
 
-	@Id 
-	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long note_id;
 	private String archive;
 	private String colours;
@@ -84,4 +84,5 @@ public class Note {
 		this.description = description;
 	}
 
+	 
 }

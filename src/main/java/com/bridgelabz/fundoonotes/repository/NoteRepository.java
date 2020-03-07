@@ -1,6 +1,7 @@
 package com.bridgelabz.fundoonotes.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.bridgelabz.fundoonotes.model.Note;
+import com.bridgelabz.fundoonotes.model.User;
 
 @Component
 @Repository
@@ -21,26 +23,33 @@ public class NoteRepository {
 
 	public void saveNote(Note note) {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		currentsession.save(note);
-
+		currentsession.save(note); 
 	}
 
-	public List<Note> getAllNotes() {
+	public Optional<List<Note>> getAllNotes() {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		Query<Note> query = currentsession.createQuery("from Note", Note.class);
-		List<Note> list = query.getResultList();
-		return list;
+		return currentsession.createQuery("from Note").uniqueResultOptional(); 
 	}
 
-	public boolean verify(Long id) {
-
-		return true;
-	}
-
-	public Note getbyId(Long note_id) {
+	 
+	public Optional<Note> getbyId(Long note_id) {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		Note note = currentsession.get(Note.class, note_id);
-		return note;
+		return currentsession.createQuery("from Note where  note_id=:note_id").setParameter("note_id", note_id).uniqueResultOptional();
+		}
 
+	public Optional<Note> getNoteByTitle(String title) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		return currentsession.createQuery("from Note where  title=:title").setParameter("title", title).uniqueResultOptional();
+	}
+
+	public void deletenote(Note note) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		currentsession.delete(note);
+		
+	}
+
+	public Note updateNote(Long note_id) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
