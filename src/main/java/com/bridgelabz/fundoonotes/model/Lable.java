@@ -2,34 +2,29 @@ package com.bridgelabz.fundoonotes.model;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GeneratorType;
 import org.springframework.stereotype.Component;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-@Component
 @Data
+@AllArgsConstructor
+@Component
 @Entity
-@Table(name = "notetable")
-public class Note {
-
- 	@Id
- 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long note_id;
-	private boolean archive;
-	private boolean pin;
-	private boolean trash;
-	private String colours;
-	private LocalDateTime remindme;
+@Table(name = "lable")
+public class Lable {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Long id;
 	private String title;
-	private String description;
+	private LocalDateTime createdate;
+	private LocalDateTime updatedate;
+
 	 
-	
 }

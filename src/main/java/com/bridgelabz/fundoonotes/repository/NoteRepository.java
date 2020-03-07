@@ -23,33 +23,34 @@ public class NoteRepository {
 
 	public void saveNote(Note note) {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		currentsession.save(note); 
+		currentsession.save(note);
 	}
 
 	public Optional<List<Note>> getAllNotes() {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from Note").uniqueResultOptional(); 
+		return currentsession.createQuery("from Note").uniqueResultOptional();
 	}
 
-	 
 	public Optional<Note> getbyId(Long note_id) {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from Note where  note_id=:note_id").setParameter("note_id", note_id).uniqueResultOptional();
-		}
+		return currentsession.createQuery("from Note where  note_id=:note_id").setParameter("note_id", note_id)
+				.uniqueResultOptional();
+	}
 
 	public Optional<Note> getNoteByTitle(String title) {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from Note where  title=:title").setParameter("title", title).uniqueResultOptional();
+		return currentsession.createQuery("from Note where  title=:title").setParameter("title", title)
+				.uniqueResultOptional();
 	}
 
 	public void deletenote(Note note) {
 		Session currentsession = entitymanager.unwrap(Session.class);
 		currentsession.delete(note);
-		
+
 	}
 
-	public Note updateNote(Long note_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<List<Note>> getAllNotesDelete() {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		return currentsession.createQuery("from TrashTable").uniqueResultOptional();
 	}
 }

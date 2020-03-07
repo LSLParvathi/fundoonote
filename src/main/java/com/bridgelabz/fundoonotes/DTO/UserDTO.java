@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoonotes.DTO;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.stereotype.Component;
 
 import lombok.AllArgsConstructor;
@@ -10,7 +12,7 @@ import lombok.Data;
 @Component
 public class UserDTO 
 {
-
+	@NotNull(message="firstname is required")
 	private String firstname;
 	private String lastname;
 	private String mobilenumber;

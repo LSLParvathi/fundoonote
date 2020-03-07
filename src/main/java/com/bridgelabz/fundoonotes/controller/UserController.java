@@ -7,6 +7,7 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.validation.Valid;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +50,7 @@ public class UserController {
 	private JWToperations ope;
 
 	@PostMapping("/register")
-	public ResponseEntity<UserResponse> register(@RequestBody UserDTO userdto) {
+	public ResponseEntity<UserResponse> register(@Valid @RequestBody UserDTO userdto) {
 		User user = userservice.register(userdto);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "successfully registered"));
 	}
@@ -102,5 +103,7 @@ public class UserController {
 				.body(new UserResponse(user, 200, "new password has been set"));
 
 	}
+	
+	 
 
 }

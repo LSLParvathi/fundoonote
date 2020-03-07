@@ -16,18 +16,11 @@ import org.springframework.stereotype.Component;
 @Table(name = "userdetails")
 public class User {
 
-	/*
-	 * private Object user; private boolean verified = true; private int n = 200;
-	 * 
-	 * public User(Object user, int n, boolean verified) {
-	 * 
-	 * this.user = user; this.verified = verified; this.n = n; }
-	 * 
-	 */
+	 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY) 
 	private Long id;
-	@NotNull(message="firstname is required")
+	 
 	private String firstname;
 	@NotNull(message = "lastname is required")
 	private String lastname;
