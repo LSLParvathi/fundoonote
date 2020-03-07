@@ -34,7 +34,7 @@ import com.bridgelabz.fundoonotes.utilis.JMSoperations;
 import com.bridgelabz.fundoonotes.utilis.JWToperations;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/user")
 public class UserController {
 
 	@Autowired
@@ -55,10 +55,10 @@ public class UserController {
 	}
 
 	@GetMapping("/verify/{token}")
-	public ResponseEntity<UserResponse> VerificationUser(@PathVariable("token") String token) throws Exception { 
-  	User user = userservice.verifyUser(token);
-			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "verified"));
-		 }
+	public ResponseEntity<UserResponse> VerificationUser(@PathVariable("token") String token) throws Exception {
+		User user = userservice.verifyUser(token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "verified"));
+	}
 
 	@PostMapping("/login")
 	public ResponseEntity<UserResponse> login(@RequestBody UserInformation userinformation) {
@@ -81,52 +81,26 @@ public class UserController {
 	}
 
 	@PutMapping("/updateuser/{id}")
-	public ResponseEntity<UserResponse> update(@RequestBody updateInformation updateinformation,@PathVariable Long id) {
-		User user = userservice.updateuser(updateinformation,id);
+	public ResponseEntity<UserResponse> update(@RequestBody updateInformation updateinformation,
+			@PathVariable Long id) {
+		User user = userservice.updateuser(updateinformation, id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "successfully updated"));
-   
+
 	}
 
- 
- 	@DeleteMapping("/delete/{id}")
- 	public ResponseEntity<UserResponse> delete(@PathVariable Long id) {
- 		userservice.deleteUser(id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200,  "the user with id " + id + " has been deleted."));
-  }
- 
- 	@GetMapping("/forgotpassword/{id}")
-	public ResponseEntity<UserResponse>  setpassword(@RequestBody Updatepassword  updatepassword,@PathVariable Long id) {
- 		User user = userservice.setnewpassword(updatepassword,id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "new password has been set"));
+	@DeleteMapping("/delete/{id}")
+	public ResponseEntity<UserResponse> delete(@PathVariable Long id) {
+		userservice.deleteUser(id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED)
+				.body(new UserResponse(200, "the user with id " + id + " has been deleted."));
+	}
 
- 	}
+	@PutMapping("/forgotpassword")
+	public ResponseEntity<UserResponse> setpassword(@RequestBody Updatepassword updatepassword) {
+		User user = userservice.setnewpassword(updatepassword);
+		return ResponseEntity.status(HttpStatus.ACCEPTED)
+				.body(new UserResponse(user, 200, "new password has been set"));
 
-//
-//	/*
-//	 * @PutMapping("/forgot/{id}") public String setnewpassword(@PathVariable Long
-//	 * id, @RequestBody User log) { User user = new User(); JWToperations ope = new
-//	 * JWToperations(); BeanUtils.copyProperties(log, user); userservice.delete(id);
-//	 * String mail = "mangalagirileela1997@gmail.com";
-//	 * System.out.println("the id is : " + id); String newpwd = "1997";
-//	 * user.setDate(LocalDateTime.now()); user.setPassword(newpwd);
-//	 * userservice.save(user); update(user); String str =
-//	 * "http://localhost:8080/forgotpassword/" + "resetpassword";
-//	 * ope.sendEmail(mail, "Verify Email", str); return
-//	 * "link has been send to this mail " + mail + " to set new password"; }
-//	 * 
-//	 * @GetMapping("/forgotpassword/{id}") public ResponseEntity<UserResponse>
-//	 * setnewpassword(@RequestBody User user, @PathVariable Long id) throws
-//	 * Exception { UserRepository userrepository = new UserRepository(); String mail
-//	 * = "mangalagirileela1997@gmail.com"; System.out.println("id is: " + id); if
-//	 * (userrepository.verify(mail) == true) {
-//	 * 
-//	 * return ResponseEntity.status(HttpStatus.ACCEPTED).body(new
-//	 * UserResponse("old", 200, "password is set")); } return
-//	 * ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse("new", 401,
-//	 * "reset password"));
-//	 * 
-//	 * }
-//	 */
-//	
+	}
 
 }

@@ -37,7 +37,7 @@ public interface UserService
 
 	void deleteUser(Long id);
 
-	User setnewpassword(Updatepassword updatepassword, Long id);
+	User setnewpassword(Updatepassword updatepassword);
 
 	 
 }

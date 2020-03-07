@@ -70,4 +70,10 @@ public class UserRepository {
 		currentsession.delete(user);
 	}
 
+	public Optional<User> getUserByMail(String mail) {
+		 Session currentsession = entitymanager.unwrap(Session.class);
+		 return currentsession.createQuery("from User where email=:email").setParameter("email", mail)
+					.uniqueResultOptional();
+	}
+
 }

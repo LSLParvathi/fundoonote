@@ -5,6 +5,7 @@ public class Updatepassword
 
 	private String setpassword;
 	private String confirmpassword;
+	private String mail;
 	
 	public String getSetpassword() {
 		return setpassword;
@@ -18,10 +19,18 @@ public class Updatepassword
 	public void setConfirmpassword(String confirmpassword) {
 		this.confirmpassword = confirmpassword;
 	}
-	public Updatepassword(String setpassword, String confirmpassword) {
+	 
+	public String getMail() {
+		return mail;
+	}
+	public void setMail(String mail) {
+		this.mail = mail;
+	}
+	public Updatepassword(String setpassword, String confirmpassword, String mail) {
 	 
 		this.setpassword = setpassword;
 		this.confirmpassword = confirmpassword;
+		this.mail = mail;
 	}
 	
 	

@@ -41,9 +41,8 @@ public class UserServiceImp implements UserService {
 		User user = new User();
 		BeanUtils.copyProperties(userdto, user);
 		boolean n = userrepository.IfEmailExists(user.getEmail()).isPresent();
-		if (n == true) {
-			throw new UserExceptions(null, 404, "email already exists");
-		} else {
+		if (n == true) { throw new UserExceptions(null, 404, "email already exists"); } 
+		else {
 			BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 			String newpwd = by.encode(user.getPassword());
 			user.setPassword(newpwd);
@@ -51,7 +50,7 @@ public class UserServiceImp implements UserService {
 			user.setUpdatedate(LocalDateTime.now());
 			user.setVerify(false);
 			userrepository.save(user);
-			String str = "http://localhost:8080/verify/" + ope.JWTToken(user.getId());
+			String str = "http://localhost:8080/user/verify/" + ope.JWTToken(user.getId());
 			ope1.sendEmail(user.getEmail(), "Verify Email", str);
 			return user;
 		}
@@ -112,29 +111,30 @@ public class UserServiceImp implements UserService {
 	public void deleteUser(Long id) {
 		User user = getUserById(id);
 		userrepository.deleteUser(user);
-		
+
 	}
+
 	@Transactional
 	@Override
-	public User setnewpassword(Updatepassword updatepassword, Long id) {
+	public User setnewpassword(Updatepassword updatepassword) {
 		String s1 = updatepassword.getConfirmpassword();
-		System.out.println("s1 is: "+s1);
-		System.out.println("id is: "+id);
-		User user = getUserById(id);
-		System.out.println("user is: "+user);
-		 
-		if((updatepassword.getSetpassword()).equals(s1)) {
+		String s2 = updatepassword.getSetpassword();
+		String mail = updatepassword.getMail();
+		User user = getUserByMail(mail);
+		if (s2.equals(s1)) {
 			BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 			String newpwd = by.encode(s1);
 			user.setPassword(newpwd);
-			userrepository.saveUser(user);
-			System.out.println("user is: "+user);
-			return user; 
-		}
-		 return null;
-		 
+			user.setUpdatedate(LocalDateTime.now());
+			userrepository.saveUser(user); 
+			return user;
+		} 
+		throw new UserExceptions(null, 404, "password is not matching");
+	}
+
+	private User getUserByMail(String mail) {
+		User user = userrepository.getUserByMail(mail).orElseThrow(() -> new UserExceptions(null, 404, "no data is existing"));
+		return user;
 	}
 
 }
-
- 
