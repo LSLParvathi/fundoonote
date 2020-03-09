@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bridgelabz.fundoonotes.DTO.NoteDto; 
+import com.bridgelabz.fundoonotes.DTO.NoteDto;
+import com.bridgelabz.fundoonotes.DTO.TrashTable;
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
@@ -30,7 +31,7 @@ public class NoteController {
 	@Autowired
 	private NoteService noteservice;
 	@Autowired
-	private Note note ;
+	private Note note;
 
 	@PostMapping("/createnote/{token}")
 	public ResponseEntity<UserResponse> AddNote(@PathVariable("token") String token, @RequestBody NoteDto notedto) {
@@ -41,54 +42,47 @@ public class NoteController {
 
 	@GetMapping("/getall")
 	public ResponseEntity<UserResponse> getallNotes() {
-		Optional<List<Note>> note = noteservice.getAllNotes();
+		 List<Note>  note = noteservice.getAllNotes();
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "current notes list"));
 	}
 
 	@GetMapping("/get/{note_id}")
-	public ResponseEntity<UserResponse> get(@PathVariable  Long note_id) {
+	public ResponseEntity<UserResponse> get(@PathVariable Long note_id) {
 		Note note = noteservice.getNoteById(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "view note"));
 	}
 
-	@DeleteMapping("/delete/{note_id}")
-	public ResponseEntity<UserResponse> delete(@PathVariable  Long note_id) {
-		noteservice.deleteNote(note_id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Note is Deleted"));
-	}
-
+	 
 	@PutMapping("/updateNote/{note_id}")
-	public ResponseEntity<UserResponse> updateNote(@PathVariable  Long note_id, @RequestBody UpdateNote updatenote) {
+	public ResponseEntity<UserResponse> updateNote(@PathVariable Long note_id, @RequestBody UpdateNote updatenote) {
 		Note note = noteservice.updatenote(note_id, updatenote);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note list is updated"));
 	}
 
 	@PutMapping("/archive/{note_id}")
-	public ResponseEntity<UserResponse> IsArchive(@PathVariable  Long note_id) {
+	public ResponseEntity<UserResponse> IsArchive(@PathVariable Long note_id) {
 		Note note = noteservice.Archive(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note archived"));
 	}
-	
+
 	@PutMapping("/pin/{note_id}")
-	public ResponseEntity<UserResponse> Ispinned(@PathVariable  Long note_id) {
+	public ResponseEntity<UserResponse> Ispinned(@PathVariable Long note_id) {
 		Note note = noteservice.Pinned(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note pinned"));
 	}
-	
+
 	@GetMapping("/gettrash")
 	public ResponseEntity<UserResponse> getallDeletedNotes() {
 		Optional<List<Note>> note = noteservice.getAllNotesdeleted();
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, " deleted notes list in trash"));
+		return ResponseEntity.status(HttpStatus.ACCEPTED)
+				.body(new UserResponse(note, 200, " deleted notes list in trash"));
+	}
+
+	@DeleteMapping("/delete/{note_id}")
+	public ResponseEntity<UserResponse> delete(@PathVariable Long note_id) {
+		noteservice.deleteNote(note_id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Note is Deleted"));
 	}
 	
-	
-	/*
-	 * @DeleteMapping("/delete/{note_id}") public ResponseEntity<UserResponse>
-	 * delete(@PathVariable Long note_id,@RequestBody TrashTable trashtable) {
-	 * noteservice.deleteNote(note_id,trashtable); return
-	 * ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200,
-	 * "Note is Deleted")); }
-	 */
-
-
+	  
 }

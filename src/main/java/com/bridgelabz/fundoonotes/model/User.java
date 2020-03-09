@@ -16,20 +16,19 @@ import org.springframework.stereotype.Component;
 @Table(name = "userdetails")
 public class User {
 
-	 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY) 
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	 
+	@NotNull(message = "firstname is required")
 	private String firstname;
 	@NotNull(message = "lastname is required")
 	private String lastname;
 	@NotNull(message = "mobilenumber is required")
-	@Size(min=10, max=10)
+	@Size(min = 10, max = 10)
 	private String mobilenumber;
 	@Email(message = "email is required")
 	private String email;
-	@NotNull(message = "password is required") 
+	@NotNull(message = "password is required")
 	private String password;
 
 	private Boolean verify = false;
@@ -92,7 +91,8 @@ public class User {
 
 	public void setPassword(String password) {
 		this.password = password;
-	} 
+	}
+
 	public LocalDateTime getCreatedate() {
 		return createdate;
 	}
@@ -128,6 +128,7 @@ public class User {
 		this.note = note;
 	}
 
-	 
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Lable> lable;
 
 }

@@ -34,6 +34,7 @@ public class UserServiceImp implements UserService {
 	private JWToperations ope;
 	@Autowired
 	private JMSoperations ope1;
+	private static final org.slf4j.Logger log =  org.slf4j.LoggerFactory.getLogger(UserServiceImp.class);
 
 	@Transactional
 	@Override
@@ -50,6 +51,7 @@ public class UserServiceImp implements UserService {
 			user.setUpdatedate(LocalDateTime.now());
 			user.setVerify(false);
 			userrepository.save(user);
+			log.info("The user has successfully logged in "+user);
 			String str = "http://localhost:8080/user/verify/" + ope.JWTToken(user.getId());
 			ope1.sendEmail(user.getEmail(), "Verify Email", str);
 			return user;

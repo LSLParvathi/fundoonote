@@ -3,13 +3,16 @@ package com.bridgelabz.fundoonotes.service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bridgelabz.fundoonotes.DTO.NoteDto; 
+import com.bridgelabz.fundoonotes.DTO.NoteDto;
+import com.bridgelabz.fundoonotes.DTO.TrashTable;
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
@@ -33,34 +36,40 @@ public class NoteServiceImp implements NoteService {
 	private Note note;
 	@Autowired
 	private UserService userservice;
-	 
+	@Autowired
+	private TrashTable trashtable;
+
 	@Transactional
 	@Override
 	public Note createNote(String token, NoteDto notedto) {
+		System.out.println("user is: "+notedto);
 		String title = notedto.getTitle();
 		Long id = ope.parseJWT(token);
-		boolean Title = noterepository.getNoteByTitle(title).isPresent();
 		User user = userservice.getUserById(id);
-		if (Title == true) { throw new UserExceptions(null, 404, "title already exists or Id does not exists"); }
-		else {
+		boolean Title = noterepository.getNoteByTitle(title).isPresent(); 
+		if (Title == true) {
+			throw new UserExceptions(null, 404, "title already exists or Id does not exists");
+		} else {
 			BeanUtils.copyProperties(notedto, note);
 			note.setArchive(false);
 			note.setColours("black");
 			note.setRemindme(LocalDateTime.now());
 			note.setPin(true);
 			note.setTrash(false);
+			System.out.println("note is: "+note);
 			user.getNote().add(note);
 			userrepository.save(user);
+			System.out.println("note is: "+note);
 			return note;
 		}
 	}
 
 	@Transactional
 	@Override
-	public Optional<List<Note>> getAllNotes() {
-		Optional<List<Note>> note = noterepository.getAllNotes();
+	public  List<Note>  getAllNotes() {
+		 List<Note>  note = noterepository.getAllNotes();
 		if (note == null) { throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");}
-		else { return note; }
+		  else { return note; }
 	}
 
 	@Transactional
@@ -70,18 +79,13 @@ public class NoteServiceImp implements NoteService {
 				.orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list"));
 		return note;
 	}
-	
-	@Transactional
-	@Override
-	public void deleteNote(Long note_id) {
-		Note note = getNoteById(note_id); 
-		noterepository.deletenote(note);
-	}
 
 	@Transactional
 	@Override
 	public Note updatenote(Long note_id, UpdateNote updatenote) {
 		Note note = getNoteById(note_id);
+//		List<Note> notes = noterepository.getAllNotes().orElseThrow(null);
+//		Note updateNote=(Note) notes.stream().filter(upnote -> upnote.getNote_id().equals(note_id)).collect(Collectors.toList());
 		BeanUtils.copyProperties(updatenote, note);
 		noterepository.saveNote(note);
 		return note;
@@ -93,9 +97,9 @@ public class NoteServiceImp implements NoteService {
 		Note note = getNoteById(note_id);
 		boolean s1 = note.isArchive();
 		boolean s2 = note.isPin();
-		if (s1 == true) { note.setArchive(false); }
-		else if (s1 == true && s2 == true) { note.setArchive(false); } 
-		else { note.setArchive(true); }
+		if (s1 == true) { note.setArchive(false);}
+		  else if (s1 == true && s2 == true) { note.setArchive(false); }
+		  else { note.setArchive(true); }
 		noterepository.saveNote(note);
 		return note;
 	}
@@ -105,24 +109,28 @@ public class NoteServiceImp implements NoteService {
 	public Note Pinned(Long note_id) {
 		Note note = getNoteById(note_id);
 		boolean s = note.isPin();
-		if (s == true) { note.setPin(false); } 
+		if (s == true) { note.setPin(false); }
 		else { note.setPin(true); }
 		return note;
 	}
-	
+
 	@Transactional
 	@Override
 	public Optional<List<Note>> getAllNotesdeleted() {
 		Optional<List<Note>> note = noterepository.getAllNotesDelete();
-		if (note == null) { throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");}
+		if (note == null) { throw new UserExceptions(null, 404, "Note is Empty No Data is Existing"); } 
 		else { return note; }
 	}
-	
-	/*
-	 * @Transactional
-	 * 
-	 * @Override public void deleteNote(Long note_id, TrashTable trashtable) { Note
-	 * note = getNoteById(note_id); BeanUtils.copyProperties(trashtable, note);
-	 * noterepository.deletenote(note); }
-	 */
+
+	@Transactional
+	@Override
+	public void deleteNote(Long note_id) {
+		Note note = getNoteById(note_id); 
+		note.setTrash(true);
+		noterepository.saveNote(note);
+		noterepository.deletenote(note);
+	}
+
+	 
+
 }

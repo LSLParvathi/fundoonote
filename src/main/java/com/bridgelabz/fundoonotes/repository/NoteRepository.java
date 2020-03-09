@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
+import com.bridgelabz.fundoonotes.DTO.TrashTable;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 
@@ -26,9 +27,11 @@ public class NoteRepository {
 		currentsession.save(note);
 	}
 
-	public Optional<List<Note>> getAllNotes() {
+	public  List<Note> getAllNotes() {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from Note").uniqueResultOptional();
+		 Query query =  currentsession.createQuery("from Note");
+		 List<Note> note = query.getResultList();
+		 return note;
 	}
 
 	public Optional<Note> getbyId(Long note_id) {
@@ -44,7 +47,7 @@ public class NoteRepository {
 	}
 
 	public void deletenote(Note note) {
-		Session currentsession = entitymanager.unwrap(Session.class);
+		Session currentsession = entitymanager.unwrap(Session.class); 
 		currentsession.delete(note);
 
 	}
@@ -53,4 +56,5 @@ public class NoteRepository {
 		Session currentsession = entitymanager.unwrap(Session.class);
 		return currentsession.createQuery("from TrashTable").uniqueResultOptional();
 	}
+	 
 }
