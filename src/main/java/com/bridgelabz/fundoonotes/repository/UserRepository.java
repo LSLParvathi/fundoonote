@@ -1,28 +1,17 @@
 package com.bridgelabz.fundoonotes.repository;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.EntityManager;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import javax.persistence.EntityManager;
-import javax.validation.valueextraction.Unwrapping.Unwrap;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
-import com.bridgelabz.fundoonotes.DTO.UserInformation;
-import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
-import com.bridgelabz.fundoonotes.controller.UserController;
-import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
-import com.bridgelabz.fundoonotes.utilis.UserResponse;
-import com.bridgelabz.fundoonotes.utilis.JWToperations;
 
 @Component
 @Repository

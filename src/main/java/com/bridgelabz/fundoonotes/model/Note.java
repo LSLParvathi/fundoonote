@@ -4,12 +4,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import javax.persistence.CascadeType;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
@@ -42,6 +42,17 @@ public class Note {
 
 	public void setLable(List<Lable> lable) {
 		this.lable = lable;
+	}
+
+	@OneToMany(cascade = CascadeType.ALL)
+	private List<Collaborator> collaborator;
+
+	public List<Collaborator> getCollaborator() {
+		return collaborator;
+	}
+
+	public void setCollaborator(List<Collaborator> collaborator) {
+		this.collaborator = collaborator;
 	}
 
 }

@@ -41,8 +41,7 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note createNote(String token, NoteDto notedto) {
-		System.out.println("user is: "+notedto);
+	public Note createNote(String token, NoteDto notedto) { 
 		String title = notedto.getTitle();
 		Long id = ope.parseJWT(token);
 		User user = userservice.getUserById(id);
@@ -55,11 +54,9 @@ public class NoteServiceImp implements NoteService {
 			note.setColours("black");
 			note.setRemindme(LocalDateTime.now());
 			note.setPin(true);
-			note.setTrash(false);
-			System.out.println("note is: "+note);
+			note.setTrash(false); 
 			user.getNote().add(note);
-			userrepository.save(user);
-			System.out.println("note is: "+note);
+			userrepository.save(user); 
 			return note;
 		}
 	}

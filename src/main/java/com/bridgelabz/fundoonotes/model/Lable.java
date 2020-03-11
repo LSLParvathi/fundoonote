@@ -9,13 +9,9 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import org.hibernate.annotations.GeneratorType;
-import org.springframework.stereotype.Component;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
  
  @Data
  @AllArgsConstructor 
@@ -26,9 +22,13 @@ import lombok.NonNull;
  	@Id
  	@GeneratedValue(strategy = GenerationType.IDENTITY)
  	private Long id; 
- 	private String title; 
+ 	@NotNull
+ 	private String title;
+ 	@NotNull
  	private String description;
+ 	@NotNull
  	private LocalDateTime createdate; 
+ 	@NotNull
  	private LocalDateTime updatedate;
  
  	 
