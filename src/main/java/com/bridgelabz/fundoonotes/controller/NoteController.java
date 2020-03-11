@@ -16,14 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.TrashTable;
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.model.Note;
-import com.bridgelabz.fundoonotes.model.User;
-import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.service.NoteService;
-import com.bridgelabz.fundoonotes.service.UserService;
-import com.bridgelabz.fundoonotes.utilis.JWToperations;
 import com.bridgelabz.fundoonotes.utilis.UserResponse;
 
 @RestController

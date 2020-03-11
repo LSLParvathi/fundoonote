@@ -44,15 +44,5 @@ public class Note {
 		this.lable = lable;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL)
-	private List<Collaborator> collaborator;
-
-	public List<Collaborator> getCollaborator() {
-		return collaborator;
-	}
-
-	public void setCollaborator(List<Collaborator> collaborator) {
-		this.collaborator = collaborator;
-	}
-
+	 
 }

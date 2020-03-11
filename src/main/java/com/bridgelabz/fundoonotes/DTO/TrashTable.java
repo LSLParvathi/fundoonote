@@ -32,6 +32,5 @@ public class TrashTable {
 	private LocalDateTime remindme;
 	private String title;
 	private String description;
-
-	 
 }
+

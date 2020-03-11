@@ -41,11 +41,11 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note createNote(String token, NoteDto notedto) { 
+	public Note createNote(String token, NoteDto notedto) {
 		String title = notedto.getTitle();
 		Long id = ope.parseJWT(token);
 		User user = userservice.getUserById(id);
-		boolean Title = noterepository.getNoteByTitle(title).isPresent(); 
+		boolean Title = noterepository.getNoteByTitle(title).isPresent();
 		if (Title == true) {
 			throw new UserExceptions(null, 404, "title already exists or Id does not exists");
 		} else {
@@ -54,25 +54,30 @@ public class NoteServiceImp implements NoteService {
 			note.setColours("black");
 			note.setRemindme(LocalDateTime.now());
 			note.setPin(true);
-			note.setTrash(false); 
+			note.setTrash(false);
 			user.getNote().add(note);
-			userrepository.save(user); 
+			userrepository.save(user);
 			return note;
 		}
 	}
 
 	@Transactional
 	@Override
-	public  List<Note>  getAllNotes() {
-		 List<Note>  note = noterepository.getAllNotes();
-		if (note == null) { throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");}
-		  else { return note; }
+	public List<Note> getAllNotes() {
+		List<Note> note = noterepository.getAllNotes();
+		if (note == null) {
+			throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");
+		} else {
+			return note;
+		}
 	}
 
 	@Transactional
 	@Override
 	public Note getNoteById(Long note_id) {
-		Note note = noterepository.getbyId(note_id) .orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list"));
+		Note note = noterepository.getbyId(note_id)
+				.orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list"));
+		System.out.println(note);
 		return note;
 	}
 
@@ -93,9 +98,13 @@ public class NoteServiceImp implements NoteService {
 		Note note = getNoteById(note_id);
 		boolean s1 = note.isArchive();
 		boolean s2 = note.isPin();
-		if (s1 == true) { note.setArchive(false);}
-		  else if (s1 == true && s2 == true) { note.setArchive(false); }
-		  else { note.setArchive(true); }
+		if (s1 == true) {
+			note.setArchive(false);
+		} else if (s1 == true && s2 == true) {
+			note.setArchive(false);
+		} else {
+			note.setArchive(true);
+		}
 		noterepository.saveNote(note);
 		return note;
 	}
@@ -105,8 +114,11 @@ public class NoteServiceImp implements NoteService {
 	public Note Pinned(Long note_id) {
 		Note note = getNoteById(note_id);
 		boolean s = note.isPin();
-		if (s == true) { note.setPin(false); }
-		else { note.setPin(true); }
+		if (s == true) {
+			note.setPin(false);
+		} else {
+			note.setPin(true);
+		}
 		return note;
 	}
 
@@ -114,14 +126,17 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public Optional<List<Note>> getAllNotesdeleted() {
 		Optional<List<Note>> note = noterepository.getAllNotesDelete();
-		if (note == null) { throw new UserExceptions(null, 404, "Note is Empty No Data is Existing"); } 
-		else { return note; }
+		if (note == null) {
+			throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");
+		} else {
+			return note;
+		}
 	}
 
 	@Transactional
 	@Override
 	public void deleteNote(Long note_id) {
-		Note note = getNoteById(note_id); 
+		Note note = getNoteById(note_id);
 		note.setTrash(true);
 		noterepository.saveNote(note);
 		noterepository.deletenote(note);
@@ -129,7 +144,7 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note remindMe(Long note_id, LocalDateTime remind) { 
+	public Note remindMe(Long note_id, LocalDateTime remind) {
 		Note note = getNoteById(note_id);
 		note.setRemindme(remind);
 		noterepository.saveNote(note);
@@ -138,12 +153,10 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public void deleteRem(Long note_id) { 
+	public void deleteRem(Long note_id) {
 		Note note = getNoteById(note_id);
 		note.setRemindme(LocalDateTime.now());
 		noterepository.saveNote(note);
 	}
-
-	 
 
 }

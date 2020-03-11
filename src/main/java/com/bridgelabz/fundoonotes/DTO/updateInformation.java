@@ -1,7 +1,7 @@
 package com.bridgelabz.fundoonotes.DTO;
 
-public class updateInformation
-{
+public class updateInformation {
+
 
 	private String phonenumber;
 	private String password;
@@ -27,7 +27,5 @@ public class updateInformation
 	public String toString() {
 		return "updateInformation [phonenumber=" + phonenumber + ", password=" + password + "]";
 	}
-	
-	
 	
 }

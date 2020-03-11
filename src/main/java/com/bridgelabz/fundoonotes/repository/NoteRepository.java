@@ -56,5 +56,13 @@ public class NoteRepository {
 		Session currentsession = entitymanager.unwrap(Session.class);
 		return currentsession.createQuery("from TrashTable").uniqueResultOptional();
 	}
+
+	public Note getnotebyId(Long note_id) { 
+		Session currentsession = entitymanager.unwrap(Session.class);
+		Query query =  currentsession.createQuery("from Note where  note_id=:note_id");
+		query.setParameter("note_id", note_id);
+		  Note note = (Note) query.getResultList();
+		 return note; 
+	}
 	 
 }

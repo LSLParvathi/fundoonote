@@ -1,15 +1,9 @@
 package com.bridgelabz.fundoonotes.controller;
 
-import java.security.Timestamp;
-
-import java.time.LocalDateTime;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +16,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.auth0.jwt.interfaces.Verification;
 import com.bridgelabz.fundoonotes.DTO.Updatepassword;
 import com.bridgelabz.fundoonotes.DTO.UserDTO;
 import com.bridgelabz.fundoonotes.DTO.UserInformation;
-import com.bridgelabz.fundoonotes.DTO.updateInformation;
+import com.bridgelabz.fundoonotes.DTO.updateInformation; 
 import com.bridgelabz.fundoonotes.model.User;
-import com.bridgelabz.fundoonotes.utilis.UserResponse;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.service.UserService;
 import com.bridgelabz.fundoonotes.utilis.JMSoperations;
 import com.bridgelabz.fundoonotes.utilis.JWToperations;
+import com.bridgelabz.fundoonotes.utilis.UserResponse;
 
 @RestController
 @RequestMapping("/user")

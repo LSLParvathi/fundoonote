@@ -1,5 +1,5 @@
 package com.bridgelabz.fundoonotes.DTO;
- 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.ToString;
