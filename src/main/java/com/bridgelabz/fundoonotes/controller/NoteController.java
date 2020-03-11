@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.controller;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class NoteController {
 
 	@GetMapping("/getall")
 	public ResponseEntity<UserResponse> getallNotes() {
-		 List<Note>  note = noteservice.getAllNotes();
+		List<Note> note = noteservice.getAllNotes();
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "current notes list"));
 	}
 
@@ -52,7 +53,6 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "view note"));
 	}
 
-	 
 	@PutMapping("/updateNote/{note_id}")
 	public ResponseEntity<UserResponse> updateNote(@PathVariable Long note_id, @RequestBody UpdateNote updatenote) {
 		Note note = noteservice.updatenote(note_id, updatenote);
@@ -83,6 +83,18 @@ public class NoteController {
 		noteservice.deleteNote(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Note is Deleted"));
 	}
-	
-	  
+
+	@PostMapping("/EditReminder/{note_id}")
+	public ResponseEntity<UserResponse> EditRem(@PathVariable Long note_id, @RequestBody LocalDateTime remind) {
+		Note note = noteservice.remindMe(note_id, remind);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note pinned"));
+	}
+
+	@DeleteMapping("deletereminder/{note_id}")
+	public ResponseEntity<UserResponse> DeleteRem(@PathVariable Long note_id) {
+		noteservice.deleteRem(note_id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Reminder is Deleted"));
+
+	}
+
 }

@@ -131,4 +131,12 @@ public class User {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Lable> lable;
 
+	public List<Lable> getLable() {
+		return lable;
+	}
+
+	public void setLable(List<Lable> lable) {
+		this.lable = lable;
+	}
+
 }

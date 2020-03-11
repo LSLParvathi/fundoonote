@@ -27,7 +27,7 @@ public interface UserService
 
 	User userlogin(UserInformation userinformation);
 
-	User getall();
+	List<User> getall();
 
 	User getUserById(Long id);
 

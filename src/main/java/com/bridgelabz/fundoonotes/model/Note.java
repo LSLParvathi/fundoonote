@@ -22,20 +22,26 @@ import lombok.Data;
 @Table(name = "noteTable")
 public class Note {
 
- 	@Id
- 	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long note_id;
-	private boolean archive=false;
+	private boolean archive = false;
 	private boolean pin;
 	private boolean trash;
 	private String colours;
 	private LocalDateTime remindme;
 	private String title;
 	private String description;
-	 
-	
+
 	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Lable> lable;
-	
-	
+
+	public List<Lable> getLable() {
+		return lable;
+	}
+
+	public void setLable(List<Lable> lable) {
+		this.lable = lable;
+	}
+
 }

@@ -1,5 +1,7 @@
 package com.bridgelabz.fundoonotes.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.DTO.LableDto;
+import com.bridgelabz.fundoonotes.DTO.NoteDto;
 import com.bridgelabz.fundoonotes.DTO.UpdateLable;
 import com.bridgelabz.fundoonotes.model.Lable;
+import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.service.LableService;
 import com.bridgelabz.fundoonotes.service.UserService;
 import com.bridgelabz.fundoonotes.utilis.UserResponse;
@@ -23,19 +27,27 @@ import com.bridgelabz.fundoonotes.utilis.UserResponse;
 @RestController
 public class LabelController {
 	@Autowired
-	private LableService lableservice; 
+	private LableService lableservice;
 
 	@PostMapping("/createlable/{token}")
 	public ResponseEntity<UserResponse> createLable(@PathVariable("token") String token,
-			 @RequestBody LableDto labledto) {
-		Lable lable = lableservice.createLable(labledto, token);
+			@RequestBody  NoteDto notedto) { 
+		Lable lable = lableservice.createLable(notedto, token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED)
+				.body(new UserResponse(lable, 200, "new lable is created successfully"));
+	}
+	
+	@PostMapping("/AddNoteTolable/{token}")
+	public ResponseEntity<UserResponse> AddNoteToLable(@PathVariable("token") String token,
+			@RequestBody  NoteDto notedto) { 
+		Lable lable = lableservice.createLable(notedto, token);
 		return ResponseEntity.status(HttpStatus.ACCEPTED)
 				.body(new UserResponse(lable, 200, "new lable is created successfully"));
 	}
 
 	@GetMapping("/getlables")
 	public ResponseEntity<UserResponse> GetAllLables() {
-		Lable lable = lableservice.getall();
+		List<Lable> lable = lableservice.getallLables();
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(lable, 200, "current lables list"));
 
 	}
@@ -43,14 +55,14 @@ public class LabelController {
 	@PutMapping("/updateLable/{id}")
 	public ResponseEntity<UserResponse> Updatelable(@PathVariable Long id, @RequestBody UpdateLable updatelable) {
 		Lable lable = lableservice.updateLables(updatelable, id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(lable, 200, "current lables list"));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(lable, 200, "lable is updated"));
 
 	}
 
 	@DeleteMapping("/deletelable/{id}")
 	public ResponseEntity<UserResponse> deletelable(@PathVariable Long id) {
 		lableservice.deleteLables(id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "current lables list"));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "lable is deleted"));
 
 	}
 }

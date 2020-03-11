@@ -70,7 +70,7 @@ public class UserController {
 
 	@GetMapping("/getall")
 	public ResponseEntity<UserResponse> getallusers() {
-		User user = userservice.getall();
+		List<User> user = userservice.getall();
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "current users list"));
 
 	}

@@ -48,10 +48,11 @@ public class UserRepository {
 				.uniqueResultOptional();
 	}
 
-	public Optional<User> get() {
+	public List<User> get() {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from User").uniqueResultOptional();
-
+		Query query = currentsession.createQuery("from User");
+		List<User> user = query.getResultList();
+		return user;
 	}
 
 	public Optional<User> get(Long id) {
@@ -66,15 +67,14 @@ public class UserRepository {
 	}
 
 	public void deleteUser(User user) {
-		Session currentsession = entitymanager.unwrap(Session.class); 
+		Session currentsession = entitymanager.unwrap(Session.class);
 		currentsession.delete(user);
 	}
 
 	public Optional<User> getUserByMail(String mail) {
-		 Session currentsession = entitymanager.unwrap(Session.class);
-		 return currentsession.createQuery("from User where email=:email").setParameter("email", mail)
-					.uniqueResultOptional();
+		Session currentsession = entitymanager.unwrap(Session.class);
+		return currentsession.createQuery("from User where email=:email").setParameter("email", mail)
+				.uniqueResultOptional();
 	}
 
-	 
 }

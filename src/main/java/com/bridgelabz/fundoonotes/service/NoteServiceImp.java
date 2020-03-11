@@ -75,8 +75,7 @@ public class NoteServiceImp implements NoteService {
 	@Transactional
 	@Override
 	public Note getNoteById(Long note_id) {
-		Note note = noterepository.getbyId(note_id)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list"));
+		Note note = noterepository.getbyId(note_id) .orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list"));
 		return note;
 	}
 
@@ -129,6 +128,23 @@ public class NoteServiceImp implements NoteService {
 		note.setTrash(true);
 		noterepository.saveNote(note);
 		noterepository.deletenote(note);
+	}
+
+	@Transactional
+	@Override
+	public Note remindMe(Long note_id, LocalDateTime remind) { 
+		Note note = getNoteById(note_id);
+		note.setRemindme(remind);
+		noterepository.saveNote(note);
+		return note;
+	}
+
+	@Transactional
+	@Override
+	public void deleteRem(Long note_id) { 
+		Note note = getNoteById(note_id);
+		note.setRemindme(LocalDateTime.now());
+		noterepository.saveNote(note);
 	}
 
 	 

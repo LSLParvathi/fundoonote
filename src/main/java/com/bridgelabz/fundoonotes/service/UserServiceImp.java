@@ -72,12 +72,15 @@ public class UserServiceImp implements UserService {
 			throw new UserExceptions(null, 404, "password is incorrect");
 		}
 	}
-
+	@Transactional
 	@Override
-	public User getall() {
-		User user = userrepository.get().orElseThrow(() -> new UserExceptions(null, 404, "no data is existing"));
-		return user;
+	public List<User> getall() {
+		List<User> user = userrepository.get();
+		if (user == null) { throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");}
+				return user;
 	}
+	
+	 
 
 	@Override
 	public User getUserById(Long id) {
