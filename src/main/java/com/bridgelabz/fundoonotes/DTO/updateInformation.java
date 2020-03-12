@@ -1,6 +1,6 @@
 package com.bridgelabz.fundoonotes.DTO;
 
-public class updateInformation {
+public class updateInformation  {
 
 
 	private String phonenumber;

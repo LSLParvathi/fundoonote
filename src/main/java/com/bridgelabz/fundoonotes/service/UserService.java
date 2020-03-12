@@ -14,18 +14,11 @@ import com.bridgelabz.fundoonotes.utilis.UserResponse;
 
 public interface UserService 
 {
-
-//	List<User> get();
-//	
-//	User get(Long id);
-//	
-//  void save(User user);
-//   
-//    void delete(Long id);
+ 
 
 	User register(UserDTO userdto);
 
-	User userlogin(UserInformation userinformation);
+	String userlogin(UserInformation userinformation);
 
 	List<User> getall();
 
@@ -39,5 +32,5 @@ public interface UserService
 
 	User setnewpassword(Updatepassword updatepassword);
 
-	 
+	 User getUserByMail(String mail);
 }

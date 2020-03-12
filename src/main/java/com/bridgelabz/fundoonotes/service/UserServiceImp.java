@@ -34,7 +34,7 @@ public class UserServiceImp implements UserService {
 	private JWToperations ope;
 	@Autowired
 	private JMSoperations ope1;
-	private static final org.slf4j.Logger log =  org.slf4j.LoggerFactory.getLogger(UserServiceImp.class);
+	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserServiceImp.class);
 
 	@Transactional
 	@Override
@@ -42,8 +42,9 @@ public class UserServiceImp implements UserService {
 		User user = new User();
 		BeanUtils.copyProperties(userdto, user);
 		boolean n = userrepository.IfEmailExists(user.getEmail()).isPresent();
-		if (n == true) { throw new UserExceptions(null, 404, "email already exists"); } 
-		else {
+		if (n == true) {
+			throw new UserExceptions(null, 404, "email already exists");
+		} else {
 			BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 			String newpwd = by.encode(user.getPassword());
 			user.setPassword(newpwd);
@@ -51,36 +52,39 @@ public class UserServiceImp implements UserService {
 			user.setUpdatedate(LocalDateTime.now());
 			user.setVerify(false);
 			userrepository.save(user);
-			log.info("The user has successfully logged in "+user);
+			log.info("The user has successfully logged in " + user);
 			String str = "http://localhost:8080/user/verify/" + ope.JWTToken(user.getId());
 			ope1.sendEmail(user.getEmail(), "Verify Email", str);
 			return user;
 		}
 	}
-
+	@Transactional
 	@Override
-	public User userlogin(UserInformation userinformation) {
+	public String userlogin(UserInformation userinformation) {
 		User user = userrepository.IfEmailExists(userinformation.getEmail())
 				.orElseThrow(() -> new UserExceptions(null, 404, "email does not exists"));
+		Long id = user.getId();
+		String token = ope.JWTToken(id);
 		String password = userinformation.getPassword();
 		String newpassword = user.getPassword();
 		BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 		boolean c = by.matches(password, newpassword);
 		if (c == true) {
-			return user;
+			return token;
 		} else {
 			throw new UserExceptions(null, 404, "password is incorrect");
 		}
 	}
+
 	@Transactional
 	@Override
 	public List<User> getall() {
 		List<User> user = userrepository.get();
-		if (user == null) { throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");}
-				return user;
+		if (user == null) {
+			throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");
+		}
+		return user;
 	}
-	
-	 
 
 	@Override
 	public User getUserById(Long id) {
@@ -131,14 +135,17 @@ public class UserServiceImp implements UserService {
 			String newpwd = by.encode(s1);
 			user.setPassword(newpwd);
 			user.setUpdatedate(LocalDateTime.now());
-			userrepository.saveUser(user); 
+			userrepository.saveUser(user);
 			return user;
-		} 
+		}
 		throw new UserExceptions(null, 404, "password is not matching");
 	}
 
-	private User getUserByMail(String mail) {
-		User user = userrepository.getUserByMail(mail).orElseThrow(() -> new UserExceptions(null, 404, "no such user exists"));
+	@Transactional
+	@Override
+	public User getUserByMail(String mail) {
+		User user = userrepository.getUserByMail(mail)
+				.orElseThrow(() -> new UserExceptions(null, 404, "no such user exists"));
 		return user;
 	}
 

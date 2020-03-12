@@ -5,14 +5,16 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToMany;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
 
@@ -32,8 +34,9 @@ public class Note {
 	private LocalDateTime remindme;
 	private String title;
 	private String description;
-
-	@ManyToMany(cascade = CascadeType.ALL)
+	
+	 
+	@ManyToMany(cascade =  {CascadeType.MERGE},fetch = FetchType.LAZY)
 	private List<Lable> lable;
 
 	public List<Lable> getLable() {
@@ -44,5 +47,15 @@ public class Note {
 		this.lable = lable;
 	}
 
-	 
+	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY)
+	private List<User> collaborator;
+
+	public List<User> getCollaborator() {
+		return collaborator;
+	}
+
+	public void setCollaborator(List<User> collaborator) {
+		this.collaborator = collaborator;
+	}
+
 }

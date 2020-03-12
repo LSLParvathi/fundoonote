@@ -30,6 +30,4 @@ import lombok.NoArgsConstructor;
  	private LocalDateTime createdate; 
  	@NotNull
  	private LocalDateTime updatedate;
- 
- 	 
  }

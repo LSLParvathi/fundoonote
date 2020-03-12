@@ -56,7 +56,7 @@ public class UserController {
 
 	@PostMapping("/login")
 	public ResponseEntity<UserResponse> login(@RequestBody UserInformation userinformation) {
-		User user = userservice.userlogin(userinformation);
+		 String user = userservice.userlogin(userinformation);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "successfully logged in"));
 
 	}

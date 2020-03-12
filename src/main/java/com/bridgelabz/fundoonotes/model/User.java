@@ -2,15 +2,22 @@ package com.bridgelabz.fundoonotes.model;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
+ 
 @Component
 @Entity
 @Table(name = "userdetails")
@@ -108,13 +115,7 @@ public class User {
 	public void setUpdatedate(LocalDateTime updatedate) {
 		this.updatedate = updatedate;
 	}
-
-	@Override
-	public String toString() {
-		return "User [id=" + id + ", firstname=" + firstname + ", lastname=" + lastname + ", mobilenumber="
-				+ mobilenumber + ", email=" + email + ", password=" + password + ", verify=" + verify + ", createdate="
-				+ createdate + ", updatedate=" + updatedate + ", note=" + note + "]";
-	}
+ 
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
@@ -138,5 +139,15 @@ public class User {
 	public void setLable(List<Lable> lable) {
 		this.lable = lable;
 	}
-
+	
+	/*
+	 * @ManyToMany(cascade = CascadeType.ALL)
+	 * 
+	 * @JsonIgnore private List<Note> collaboratorNote;
+	 * 
+	 * public List<Note> getCollaboratorNote() { return collaboratorNote; }
+	 * 
+	 * public void setCollaboratorNote(List<Note> collaboratorNote) {
+	 * this.collaboratorNote = collaboratorNote; }
+	 */
 }

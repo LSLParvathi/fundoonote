@@ -7,7 +7,7 @@ import lombok.ToString;
 @Data
 @AllArgsConstructor
 @ToString
-public class NoteDto {
+public class NoteDto  {
 
 	private String title;
 	private String description;

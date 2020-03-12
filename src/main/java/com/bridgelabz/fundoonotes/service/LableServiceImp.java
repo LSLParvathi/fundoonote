@@ -2,34 +2,21 @@ package com.bridgelabz.fundoonotes.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
-import javax.validation.Valid;
-
-import org.hibernate.Session;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import com.bridgelabz.fundoonotes.DTO.LableDto;
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
 import com.bridgelabz.fundoonotes.DTO.UpdateLable;
-import com.bridgelabz.fundoonotes.DTO.Updatepassword;
-import com.bridgelabz.fundoonotes.DTO.UserDTO;
-import com.bridgelabz.fundoonotes.DTO.UserInformation;
-import com.bridgelabz.fundoonotes.DTO.updateInformation;
 import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Lable;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.LableRepository;
-import com.bridgelabz.fundoonotes.repository.NoteRepository;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.utilis.JWToperations;
-import com.bridgelabz.fundoonotes.utilis.UserResponse;
 
 @Service
 public class LableServiceImp implements LableService {
@@ -40,9 +27,7 @@ public class LableServiceImp implements LableService {
 	@Autowired
 	private LableRepository lablerepository;
 	@Autowired
-	private UserRepository userrepository;
-	@Autowired
-	private NoteRepository noterepository;
+	private UserRepository userrepository; 
 	@Autowired
 	private Note note;
 	@Autowired
@@ -60,27 +45,14 @@ public class LableServiceImp implements LableService {
 
 	@Transactional
 	@Override
-	public Lable AddNoteToLable(NoteDto notedto, String token) {
-		String title = notedto.getTitle();
-		boolean Title = lablerepository.getLableByTitle(title).isPresent();
-		Long id = ope.parseJWT(token);
-		User user = userservice.getUserById(id);
-		if (Title == true) {
-			throw new UserExceptions(null, 404, "title is already existing");
-		} else {
-			Lable lable = new Lable();
-			BeanUtils.copyProperties(notedto, lable);
-			lable.setCreatedate(LocalDateTime.now());
-			lable.setUpdatedate(LocalDateTime.now());
-			Note note = noteservice.getNoteById(id);
-			note.getLable().add(lable);
-			user.getNote().add(note);
-			userrepository.save(user); 
-			return lable;
-		}
-
+	public Note AddLableToNote(String token, Long note_id, Long lable_id) {
+		Lable lable = lablerepository.getById(lable_id)
+				.orElseThrow(() -> new UserExceptions(null, 404, "no such id is existing"));
+		Note note = noteservice.getNoteById(note_id);
+		note.getLable().add(lable);
+		return note;
 	}
-	
+
 	@Transactional
 	@Override
 	public Lable createLable(NoteDto notedto, String token) {
@@ -94,9 +66,9 @@ public class LableServiceImp implements LableService {
 			Lable lable = new Lable();
 			BeanUtils.copyProperties(notedto, lable);
 			lable.setCreatedate(LocalDateTime.now());
-			lable.setUpdatedate(LocalDateTime.now()); 
+			lable.setUpdatedate(LocalDateTime.now());
 			user.getLable().add(lable);
-			userrepository.save(user); 
+			userrepository.save(user);
 			return lable;
 		}
 
@@ -119,6 +91,15 @@ public class LableServiceImp implements LableService {
 		Lable lable = lablerepository.getById(id)
 				.orElseThrow(() -> new UserExceptions(null, 404, "no such id is existing"));
 		lablerepository.deleteLable(lable);
+	}
+
+	@Transactional
+	@Override
+	public void deleteLablesFromNote(Long note_id, Long lable_id) {
+		Lable lable = lablerepository.getById(lable_id)
+				.orElseThrow(() -> new UserExceptions(null, 404, "no such id is existing"));
+		Note note = noteservice.getNoteById(note_id);
+		note.getLable().remove(lable);
 	}
 
 }
