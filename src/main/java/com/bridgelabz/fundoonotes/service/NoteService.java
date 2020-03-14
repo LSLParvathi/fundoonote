@@ -1,6 +1,7 @@
 package com.bridgelabz.fundoonotes.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,4 +32,6 @@ public interface NoteService {
 	Note remindMe(Long note_id, LocalDateTime remind);
 
 	void deleteRem(Long note_id);
+
+	ArrayList<Note> getAllsortedNotes();
 }

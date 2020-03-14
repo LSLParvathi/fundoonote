@@ -14,7 +14,8 @@ import javax.persistence.Table;
 
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import lombok.Data;
 
@@ -22,7 +23,9 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "noteTable")
-public class Note {
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope =Note.class)
+
+public class Note   {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,6 +37,7 @@ public class Note {
 	private LocalDateTime remindme;
 	private String title;
 	private String description;
+	 
 	
 	 
 	@ManyToMany(cascade =  {CascadeType.MERGE},fetch = FetchType.LAZY)
@@ -47,6 +51,7 @@ public class Note {
 		this.lable = lable;
 	}
 
+	  
 	@ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REFRESH},fetch = FetchType.LAZY)
 	private List<User> collaborator;
 

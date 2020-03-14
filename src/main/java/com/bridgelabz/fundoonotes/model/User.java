@@ -17,7 +17,6 @@ import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
- 
 @Component
 @Entity
 @Table(name = "userdetails")
@@ -115,7 +114,6 @@ public class User {
 	public void setUpdatedate(LocalDateTime updatedate) {
 		this.updatedate = updatedate;
 	}
- 
 
 	@OneToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
@@ -139,15 +137,5 @@ public class User {
 	public void setLable(List<Lable> lable) {
 		this.lable = lable;
 	}
-	
-	/*
-	 * @ManyToMany(cascade = CascadeType.ALL)
-	 * 
-	 * @JsonIgnore private List<Note> collaboratorNote;
-	 * 
-	 * public List<Note> getCollaboratorNote() { return collaboratorNote; }
-	 * 
-	 * public void setCollaboratorNote(List<Note> collaboratorNote) {
-	 * this.collaboratorNote = collaboratorNote; }
-	 */
+
 }

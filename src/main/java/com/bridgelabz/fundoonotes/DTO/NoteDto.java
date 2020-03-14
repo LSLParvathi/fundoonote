@@ -5,8 +5,7 @@ import lombok.Data;
 import lombok.ToString;
 
 @Data
-@AllArgsConstructor
-@ToString
+@AllArgsConstructor 
 public class NoteDto  {
 
 	private String title;

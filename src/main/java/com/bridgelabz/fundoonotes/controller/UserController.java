@@ -1,6 +1,8 @@
 package com.bridgelabz.fundoonotes.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.validation.Valid;
 
@@ -14,14 +16,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.bridgelabz.fundoonotes.DTO.Updatepassword;
 import com.bridgelabz.fundoonotes.DTO.UserDTO;
 import com.bridgelabz.fundoonotes.DTO.UserInformation;
-import com.bridgelabz.fundoonotes.DTO.updateInformation; 
+import com.bridgelabz.fundoonotes.DTO.updateInformation;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
+import com.bridgelabz.fundoonotes.service.AmazonS3Service;
 import com.bridgelabz.fundoonotes.service.UserService;
 import com.bridgelabz.fundoonotes.utilis.JMSoperations;
 import com.bridgelabz.fundoonotes.utilis.JWToperations;
@@ -41,6 +47,8 @@ public class UserController {
 	private User user;
 	@Autowired
 	private JWToperations ope;
+	@Autowired
+	private AmazonS3Service amazonS3Service;
 
 	@PostMapping("/register")
 	public ResponseEntity<UserResponse> register(@Valid @RequestBody UserDTO userdto) {
@@ -56,7 +64,7 @@ public class UserController {
 
 	@PostMapping("/login")
 	public ResponseEntity<UserResponse> login(@RequestBody UserInformation userinformation) {
-		 String user = userservice.userlogin(userinformation);
+		String user = userservice.userlogin(userinformation);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(user, 200, "successfully logged in"));
 
 	}
@@ -96,7 +104,25 @@ public class UserController {
 				.body(new UserResponse(user, 200, "new password has been set"));
 
 	}
-	
-	 
+
+	@PostMapping("/addprofilepic")
+	public Map<String, String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
+		this.amazonS3Service.uploadFileToS3Bucket(file, true);
+
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "file [" + file.getOriginalFilename() + "] uploading request submitted successfully.");
+
+		return response;
+	}
+
+	@DeleteMapping("/deleteprofilepic")
+	public Map<String, String> deleteFile(@RequestParam("file_name") String fileName) {
+		this.amazonS3Service.deleteFileFromS3Bucket(fileName);
+
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "file [" + fileName + "] removing request submitted successfully.");
+
+		return response;
+	}
 
 }

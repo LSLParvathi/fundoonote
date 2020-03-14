@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.repository;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,7 +31,7 @@ public class NoteRepository {
 	public  List<Note> getAllNotes() {
 		Session currentsession = entitymanager.unwrap(Session.class);
 		 Query query =  currentsession.createQuery("from Note");
-		 List<Note> note = query.getResultList();
+		 List<Note> note = query.getResultList(); 
 		 return note;
 	}
 

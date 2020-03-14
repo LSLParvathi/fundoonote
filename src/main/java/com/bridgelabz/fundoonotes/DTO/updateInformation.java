@@ -22,10 +22,6 @@ public class updateInformation  {
 	 
 		this.phonenumber = phonenumber;
 		this.password = password;
-	}
-	@Override
-	public String toString() {
-		return "updateInformation [phonenumber=" + phonenumber + ", password=" + password + "]";
-	}
+	} 
 	
 }

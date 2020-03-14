@@ -1,6 +1,7 @@
 package com.bridgelabz.fundoonotes.controller;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -90,6 +91,12 @@ public class NoteController {
 		noteservice.deleteRem(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Reminder is Deleted"));
 
+	}
+	
+	@GetMapping("/get")
+	public ResponseEntity<UserResponse> getallSortedNotes() {
+		ArrayList<Note> note = noteservice.getAllsortedNotes();
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "current notes list"));
 	}
 
 }

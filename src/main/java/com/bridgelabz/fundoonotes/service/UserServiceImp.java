@@ -1,6 +1,8 @@
 package com.bridgelabz.fundoonotes.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -34,12 +36,14 @@ public class UserServiceImp implements UserService {
 	private JWToperations ope;
 	@Autowired
 	private JMSoperations ope1;
+	@Autowired
+	private User user;
+
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserServiceImp.class);
 
 	@Transactional
 	@Override
 	public User register(UserDTO userdto) {
-		User user = new User();
 		BeanUtils.copyProperties(userdto, user);
 		boolean n = userrepository.IfEmailExists(user.getEmail()).isPresent();
 		if (n == true) {
@@ -58,6 +62,7 @@ public class UserServiceImp implements UserService {
 			return user;
 		}
 	}
+
 	@Transactional
 	@Override
 	public String userlogin(UserInformation userinformation) {
@@ -82,7 +87,7 @@ public class UserServiceImp implements UserService {
 		List<User> user = userrepository.get();
 		if (user == null) {
 			throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");
-		}
+		} 
 		return user;
 	}
 

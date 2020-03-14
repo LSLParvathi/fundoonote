@@ -1,11 +1,12 @@
 package com.bridgelabz.fundoonotes.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
+import org.hibernate.validator.internal.constraintvalidators.bv.notempty.NotEmptyValidatorForMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -158,5 +159,16 @@ public class NoteServiceImp implements NoteService {
 		note.setRemindme(LocalDateTime.now());
 		noterepository.saveNote(note);
 	}
+
+	@Override
+	public ArrayList<Note> getAllsortedNotes() {
+		ArrayList<Note> list =  new ArrayList<Note>();
+	  
+	  for( long i=1;i<5;i++) { Note note = getNoteById(i);
+	  
+	  }
+	  
+	  
+	  return null; }
 
 }

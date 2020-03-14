@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.repository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,6 +65,13 @@ public class UserRepository {
 		Session currentsession = entitymanager.unwrap(Session.class);
 		return currentsession.createQuery("from User where email=:email").setParameter("email", mail)
 				.uniqueResultOptional();
+	}
+
+	public ArrayList<User> getAllUsers() {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		Query query = currentsession.createQuery("from User");
+		ArrayList<User> user = (ArrayList<User>) query.getResultList();
+		return user;
 	}
 
 }

@@ -25,10 +25,6 @@ public class UserInformation {
 		this.email = email;
 		this.password = password;
 	}
-
-	@Override
-	public String toString() {
-		return "UserInformation [email=" + email + ", password=" + password + "]";
-	}
+ 
 
 }
