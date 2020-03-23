@@ -50,8 +50,7 @@ public class AmazonS3ServiceImp implements AmazonS3Service {
             if (enablePublicReadAccess) {
                 putObjectRequest.withCannedAcl(CannedAccessControlList.PublicRead);
             }
-            this.amazonS3.putObject(putObjectRequest);
-            //removing the file created in the server
+            this.amazonS3.putObject(putObjectRequest); 
             file.delete();
         } catch (IOException  ex) {
         	System.out.println("there is some error");
