@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
+import com.bridgelabz.fundoonotes.DTO.SearchNote;
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.service.NoteService;
@@ -65,14 +66,7 @@ public class NoteController {
 	public ResponseEntity<UserResponse> Ispinned(@PathVariable Long note_id) {
 		Note note = noteservice.Pinned(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note pinned"));
-	}
-
-	@GetMapping("/gettrash")
-	public ResponseEntity<UserResponse> getallDeletedNotes() {
-		Optional<List<Note>> note = noteservice.getAllNotesdeleted();
-		return ResponseEntity.status(HttpStatus.ACCEPTED)
-				.body(new UserResponse(note, 200, " deleted notes list in trash"));
-	}
+	} 
 
 	@DeleteMapping("/delete/{note_id}")
 	public ResponseEntity<UserResponse> delete(@PathVariable Long note_id) {
@@ -92,11 +86,12 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Reminder is Deleted"));
 
 	}
+	 
 	
-	@GetMapping("/get")
-	public ResponseEntity<UserResponse> getallSortedNotes() {
-		ArrayList<Note> note = noteservice.getAllsortedNotes();
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "current notes list"));
+	@GetMapping("/GetAllNotesByTitleAndDescription")
+	public ResponseEntity<UserResponse> getNotesBYTitleAndDescription(@RequestBody  SearchNote searchnote) {
+		 List<Note> note = noteservice.getNotesByTitleAndDescription(searchnote);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "notes by title by description"));
 	}
 
 }

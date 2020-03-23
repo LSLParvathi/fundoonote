@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.TrashTable;
+import com.bridgelabz.fundoonotes.DTO.SearchNote; 
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
@@ -36,9 +36,7 @@ public class NoteServiceImp implements NoteService {
 	@Autowired
 	private Note note;
 	@Autowired
-	private UserService userservice;
-	@Autowired
-	private TrashTable trashtable;
+	private UserService userservice; 
 
 	@Transactional
 	@Override
@@ -125,17 +123,6 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Optional<List<Note>> getAllNotesdeleted() {
-		Optional<List<Note>> note = noterepository.getAllNotesDelete();
-		if (note == null) {
-			throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");
-		} else {
-			return note;
-		}
-	}
-
-	@Transactional
-	@Override
 	public void deleteNote(Long note_id) {
 		Note note = getNoteById(note_id);
 		note.setTrash(true);
@@ -160,15 +147,15 @@ public class NoteServiceImp implements NoteService {
 		noterepository.saveNote(note);
 	}
 
+	@Transactional
 	@Override
-	public ArrayList<Note> getAllsortedNotes() {
-		ArrayList<Note> list =  new ArrayList<Note>();
-	  
-	  for( long i=1;i<5;i++) { Note note = getNoteById(i);
-	  
-	  }
-	  
-	  
-	  return null; }
+	public ArrayList<Note> getNotesByTitleAndDescription(SearchNote searchnote) {
+		String title = searchnote.getTitle();
+		System.out.println("wlecome");
+		String description = searchnote.getDescription();
+		Note note = noterepository.searchNoteByTitleAndDescription(title, description)
+				.orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list")); 
+		return null;
+	}
 
 }

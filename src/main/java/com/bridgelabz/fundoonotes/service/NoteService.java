@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.TrashTable;
+import com.bridgelabz.fundoonotes.DTO.SearchNote; 
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
@@ -23,15 +23,12 @@ public interface NoteService {
 
 	Note Archive(Long note_id);
 
-	Note Pinned(Long note_id);
-
-	Optional<List<Note>> getAllNotesdeleted(); 
+	Note Pinned(Long note_id); 
 	
 	void deleteNote(Long note_id);
 
 	Note remindMe(Long note_id, LocalDateTime remind);
 
-	void deleteRem(Long note_id);
-
-	ArrayList<Note> getAllsortedNotes();
+	void deleteRem(Long note_id); 
+	List<Note> getNotesByTitleAndDescription(SearchNote searchnote);
 }
