@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
@@ -32,7 +33,7 @@ public class NoteController {
 	private Note note;
 
 	@PostMapping("/createnote/{token}")
-	public ResponseEntity<UserResponse> AddNote(@PathVariable("token") String token, @RequestBody NoteDto notedto) {
+	public ResponseEntity<UserResponse> AddNote(@RequestHeader("token") String token, @RequestBody NoteDto notedto) {
 		Note note = noteservice.createNote(token, notedto);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "New note is created"));
 

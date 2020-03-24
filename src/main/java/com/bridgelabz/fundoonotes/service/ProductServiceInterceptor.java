@@ -22,18 +22,17 @@ public class ProductServiceInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-
+		String token = request.getHeader("token");
+		System.out.println("the token is: " + token);
+		if (token == null) {
+			throw new RuntimeException("Authorization token is required");
+		}
 		log.info("Post Handle method is Calling");
 	}
 
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler,
 			Exception exception) throws Exception {
-
-		String token = request.getHeader("token");
-		if (token == null) {
-			throw new RuntimeException("Authorization token is required");
-		}
 
 		log.info("Request and Response is completed");
 	}
