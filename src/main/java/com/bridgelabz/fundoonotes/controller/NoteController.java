@@ -32,7 +32,7 @@ public class NoteController {
 	@Autowired
 	private Note note;
 
-	@PostMapping("/createnote/{token}")
+	@PostMapping("/createnote")
 	public ResponseEntity<UserResponse> AddNote(@RequestHeader("token") String token, @RequestBody NoteDto notedto) {
 		Note note = noteservice.createNote(token, notedto);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "New note is created"));
@@ -40,49 +40,49 @@ public class NoteController {
 	}
 
 	@GetMapping("/getall")
-	public ResponseEntity<UserResponse> getallNotes() {
+	public ResponseEntity<UserResponse> getallNotes(@RequestHeader("token") String token) {
 		List<Note> note = noteservice.getAllNotes();
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "current notes list"));
 	}
 
 	@GetMapping("/get/{note_id}")
-	public ResponseEntity<UserResponse> get(@PathVariable Long note_id) {
+	public ResponseEntity<UserResponse> get(@PathVariable Long note_id,@RequestHeader("token") String token) {
 		Note note = noteservice.getNoteById(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "view note"));
 	}
 
 	@PutMapping("/updateNote/{note_id}")
-	public ResponseEntity<UserResponse> updateNote(@PathVariable Long note_id, @RequestBody UpdateNote updatenote) {
+	public ResponseEntity<UserResponse> updateNote(@PathVariable Long note_id, @RequestBody UpdateNote updatenote,@RequestHeader("token") String token) {
 		Note note = noteservice.updatenote(note_id, updatenote);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note list is updated"));
 	}
 
 	@PutMapping("/archive/{note_id}")
-	public ResponseEntity<UserResponse> IsArchive(@PathVariable Long note_id) {
+	public ResponseEntity<UserResponse> IsArchive(@PathVariable Long note_id,@RequestHeader("token") String token) {
 		Note note = noteservice.Archive(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note archived"));
 	}
 
 	@PutMapping("/pin/{note_id}")
-	public ResponseEntity<UserResponse> Ispinned(@PathVariable Long note_id) {
+	public ResponseEntity<UserResponse> Ispinned(@PathVariable Long note_id,@RequestHeader("token") String token) {
 		Note note = noteservice.Pinned(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note pinned"));
 	} 
 
 	@DeleteMapping("/delete/{note_id}")
-	public ResponseEntity<UserResponse> delete(@PathVariable Long note_id) {
+	public ResponseEntity<UserResponse> delete(@PathVariable Long note_id,@RequestHeader("token") String token) {
 		noteservice.deleteNote(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Note is Deleted"));
 	}
 
 	@PostMapping("/EditReminder/{note_id}")
-	public ResponseEntity<UserResponse> EditRem(@PathVariable Long note_id, @RequestBody LocalDateTime remind) {
+	public ResponseEntity<UserResponse> EditRem(@PathVariable Long note_id, @RequestBody LocalDateTime remind,@RequestHeader("token") String token) {
 		Note note = noteservice.remindMe(note_id, remind);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "note pinned"));
 	}
 
 	@DeleteMapping("deletereminder/{note_id}")
-	public ResponseEntity<UserResponse> DeleteRem(@PathVariable Long note_id) {
+	public ResponseEntity<UserResponse> DeleteRem(@PathVariable Long note_id,@RequestHeader("token") String token) {
 		noteservice.deleteRem(note_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "Reminder is Deleted"));
 
@@ -90,7 +90,7 @@ public class NoteController {
 	 
 	
 	@GetMapping("/GetAllNotesByTitleAndDescription")
-	public ResponseEntity<UserResponse> getNotesBYTitleAndDescription(@RequestBody  SearchNote searchnote) {
+	public ResponseEntity<UserResponse> getNotesBYTitleAndDescription(@RequestBody  SearchNote searchnote,@RequestHeader("token") String token) {
 		 List<Note> note = noteservice.getNotesByTitleAndDescription(searchnote);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "notes by title by description"));
 	}

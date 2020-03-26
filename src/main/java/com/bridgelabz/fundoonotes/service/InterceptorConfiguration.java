@@ -5,13 +5,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
-
 @Component
-public class ProductServiceInterceptorAppConfig extends WebMvcConfigurerAdapter {
-   @Autowired
-   ProductServiceInterceptor productServiceInterceptor;
-  
-   public void addInterceptors(InterceptorRegistry registry) {
-      registry.addInterceptor(productServiceInterceptor);
-   }
-}
+public class InterceptorConfiguration extends WebMvcConfigurerAdapter {
+	   @Autowired
+	    NoteServiceInterceptor productServiceInterceptor;
+	  
+	   public void addInterceptors(InterceptorRegistry registry) {
+	      registry.addInterceptor(productServiceInterceptor);
+	   }
+	}
+

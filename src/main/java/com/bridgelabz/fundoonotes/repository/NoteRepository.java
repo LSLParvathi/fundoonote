@@ -3,8 +3,13 @@ package com.bridgelabz.fundoonotes.repository;
 import java.util.List;
 import java.util.Optional;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import org.hibernate.search.Search;
+import org.hibernate.search.jpa.FullTextEntityManager;
+import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
@@ -57,15 +62,15 @@ public class NoteRepository {
 	}
 
 	public Optional<Note> searchNoteByTitleAndDescription(String title, String description) {
-		System.out.println("hello");
 		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from Note where title=:title and description=:description")
-				.setParameter("description", description).setParameter("title", title).uniqueResultOptional();
+		FullTextEntityManager em = org.hibernate.search.jpa.Search.getFullTextEntityManager(entitymanager);
+		em.getSearchFactory().buildQueryBuilder().forEntity(Note.class).get().keyword().onFields("title", "description")
+				.ignoreFieldBridge().ignoreAnalyzer().matching(title).createQuery();
+		if (Boolean.TRUE) {
+			return currentsession.createQuery("from Note where title=:title and description=:description")
+					.setParameter("description", description).setParameter("title", title).uniqueResultOptional();
+		}
+		return null;
 	}
-	
-	/*
-	 * GET /bank/_search { "query": { "bool": { "must": [ { "match": { "age": "40" }
-	 * } ], "must_not": [ { "match": { "state": "ID" } } ] } } }
-	 */
 
 }

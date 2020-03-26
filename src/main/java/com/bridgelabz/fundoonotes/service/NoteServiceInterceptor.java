@@ -2,12 +2,17 @@ package com.bridgelabz.fundoonotes.service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.bridgelabz.fundoonotes.Exceptions.UserException;
+import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
+import com.bridgelabz.fundoonotes.utilis.UserResponse;
+
 @Component
-public class ProductServiceInterceptor implements HandlerInterceptor {
+public class NoteServiceInterceptor implements HandlerInterceptor {
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserServiceImp.class);
 
@@ -15,6 +20,10 @@ public class ProductServiceInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 
+		String token = request.getHeader("token");
+		if (token == null) {
+			throw new UserExceptions(null, 404, "token is not valid");
+		}
 		log.info("Pre Handle method is Calling");
 		return true;
 	}
@@ -22,11 +31,7 @@ public class ProductServiceInterceptor implements HandlerInterceptor {
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		String token = request.getHeader("token");
-		System.out.println("the token is: " + token);
-		if (token == null) {
-			throw new RuntimeException("Authorization token is required");
-		}
+
 		log.info("Post Handle method is Calling");
 	}
 
