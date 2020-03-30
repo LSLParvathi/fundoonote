@@ -1,13 +1,10 @@
 package com.bridgelabz.fundoonotes.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,15 +14,10 @@ import com.bridgelabz.fundoonotes.DTO.UserDTO;
 import com.bridgelabz.fundoonotes.DTO.UserInformation;
 import com.bridgelabz.fundoonotes.DTO.updateInformation;
 import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
-import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
+import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.utilis.JMSoperations;
 import com.bridgelabz.fundoonotes.utilis.JWToperations;
-import com.bridgelabz.fundoonotes.utilis.UserResponse;
-import com.bridgelabz.fundoonotes.repository.UserRepository;
-import java.util.Optional;
-
-import javax.security.auth.login.LoginException;
 
 @Service
 public class UserServiceImp implements UserService {
@@ -87,7 +79,7 @@ public class UserServiceImp implements UserService {
 		List<User> user = userrepository.get();
 		if (user == null) {
 			throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");
-		} 
+		}
 		return user;
 	}
 

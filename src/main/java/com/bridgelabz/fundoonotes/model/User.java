@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
@@ -17,9 +18,14 @@ import javax.validation.constraints.Size;
 
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 @Component
 @Entity
 @Table(name = "userdetails")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = User.class)
+
 public class User {
 
 	@Id
@@ -115,7 +121,7 @@ public class User {
 		this.updatedate = updatedate;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinColumn(name = "id")
 	private List<Note> note;
 
@@ -127,7 +133,7 @@ public class User {
 		this.note = note;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL)
+	@ManyToMany(cascade = CascadeType.ALL)
 	private List<Lable> lable;
 
 	public List<Lable> getLable() {
