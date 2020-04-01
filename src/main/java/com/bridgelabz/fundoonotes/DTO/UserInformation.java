@@ -25,6 +25,11 @@ public class UserInformation {
 		this.email = email;
 		this.password = password;
 	}
+
+	public UserInformation() { 
+	}
+	
+	
  
 
 }

@@ -124,5 +124,11 @@ public class UserController {
 
 		return response;
 	}
+	
+	@GetMapping("/check")
+	public String send()
+	{
+		return "hai";
+	}
 
 }
