@@ -27,9 +27,8 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	private JWToperations ope;
 	@Autowired
-	private JMSoperations ope1;
-	@Autowired
-	private User user;
+	private JMSoperations ope1; 
+    User user = new User();
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserServiceImp.class);
 

@@ -1,12 +1,9 @@
 package com.bridgelabz.fundoonotes.controller;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -31,8 +28,7 @@ public class NoteController {
 
 	@Autowired
 	private NoteService noteservice;
-	@Autowired
-	private Note note;
+    Note note = new Note();
 	@Autowired
 	private RedisService redisservice;
 
@@ -48,7 +44,8 @@ public class NoteController {
 	public ResponseEntity<UserResponse> getallNotes(@RequestHeader("token") String token) {
 		List<Note> note = noteservice.getAllNotes();
 		if (redisservice.getToken(token) == false)
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UserResponse(200, "No such token in the database"));
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+					.body(new UserResponse(200, "No such token in the database"));
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "current notes list"));
 	}
 
@@ -56,8 +53,9 @@ public class NoteController {
 	public ResponseEntity<UserResponse> get(@PathVariable Long note_id, @RequestHeader("token") String token) {
 		Note note = noteservice.getNoteById(note_id);
 		if (redisservice.getToken(token) == false)
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new UserResponse(200, "No such token in the database"));
-		
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+					.body(new UserResponse(200, "No such token in the database"));
+
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(note, 200, "view note"));
 	}
 

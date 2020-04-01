@@ -1,7 +1,7 @@
+package com.bridgelabz.fundoonotes.interceptors;
+
 
 /*
- * package com.bridgelabz.fundoonotes.service;
- * 
  * import javax.servlet.http.HttpServletRequest; import
  * javax.servlet.http.HttpServletResponse;
  * 

@@ -43,8 +43,7 @@ public class UserController {
 	private JMSoperations ope1;
 	@Autowired
 	private UserRepository userrepository;
-	@Autowired
-	private User user;
+	User user = new User();
 	@Autowired
 	private JWToperations ope;
 	@Autowired
@@ -124,10 +123,9 @@ public class UserController {
 
 		return response;
 	}
-	
+
 	@GetMapping("/check")
-	public String send()
-	{
+	public String send() {
 		return "hai";
 	}
 

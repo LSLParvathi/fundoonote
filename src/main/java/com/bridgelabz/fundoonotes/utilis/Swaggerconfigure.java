@@ -1,12 +1,12 @@
 
-package com.bridgelabz.fundoonotes.service;
+package com.bridgelabz.fundoonotes.utilis;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
 @Configuration
-public class WebMvcConfigure extends WebMvcConfigurationSupport {
+public class Swaggerconfigure extends WebMvcConfigurationSupport {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -2,18 +2,16 @@ package com.bridgelabz.fundoonotes.service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
-import org.hibernate.validator.internal.constraintvalidators.bv.notempty.NotEmptyValidatorForMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.SearchNote; 
+import com.bridgelabz.fundoonotes.DTO.SearchNote;
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
@@ -33,10 +31,9 @@ public class NoteServiceImp implements NoteService {
 	private JWToperations ope;
 	@Autowired
 	private NoteService noteservice;
+	Note note = new Note();
 	@Autowired
-	private Note note;
-	@Autowired
-	private UserService userservice; 
+	private UserService userservice;
 
 	@Transactional
 	@Override
@@ -84,9 +81,10 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public Note updatenote(Long note_id, UpdateNote updatenote) {
 		Note note = getNoteById(note_id);
-//		List<Note> notes = noterepository.getAllNotes().orElseThrow(null);
-//		Note updateNote=(Note) notes.stream().filter(upnote -> upnote.getNote_id().equals(note_id)).collect(Collectors.toList());
-		BeanUtils.copyProperties(updatenote, note);
+		List<Note> notes = noterepository.getAllNotes();
+		Note updateNote = (Note) notes.stream().filter(upnote -> upnote.getNote_id().equals(note_id))
+				.collect(Collectors.toList());
+		// BeanUtils.copyProperties(updatenote, note);
 		noterepository.saveNote(note);
 		return note;
 	}
@@ -154,7 +152,7 @@ public class NoteServiceImp implements NoteService {
 		System.out.println("wlecome");
 		String description = searchnote.getDescription();
 		Note note = noterepository.searchNoteByTitleAndDescription(title, description)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list")); 
+				.orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list"));
 		return null;
 	}
 

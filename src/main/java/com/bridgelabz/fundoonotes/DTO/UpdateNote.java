@@ -2,6 +2,9 @@ package com.bridgelabz.fundoonotes.DTO;
 
 public class UpdateNote {
 
+	public UpdateNote() { 
+		
+	}
 	private String colours;
 	private String title;
 	private String description;

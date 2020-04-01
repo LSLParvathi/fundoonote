@@ -2,21 +2,17 @@ package com.bridgelabz.fundoonotes.repository;
 
 import java.util.List;
 import java.util.Optional;
+
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
 
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.hibernate.search.Search;
 import org.hibernate.search.jpa.FullTextEntityManager;
-import org.hibernate.search.query.dsl.QueryBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.bridgelabz.fundoonotes.model.Note;
 
-@Component
 @Repository
 public class NoteRepository {
 

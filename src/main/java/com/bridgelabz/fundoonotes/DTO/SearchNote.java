@@ -39,7 +39,7 @@ public class SearchNote {
  * @Entity
  * 
  * @Indexed public class ProductCatalog {
- * 
+ *                                                                                 
  * @Id
  * 
  * @GeneratedValue

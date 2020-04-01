@@ -27,9 +27,8 @@ public class LableServiceImp implements LableService {
 	@Autowired
 	private LableRepository lablerepository;
 	@Autowired
-	private UserRepository userrepository; 
-	@Autowired
-	private Note note;
+	private UserRepository userrepository;
+	Note note = new Note();
 	@Autowired
 	private NoteService noteservice;
 

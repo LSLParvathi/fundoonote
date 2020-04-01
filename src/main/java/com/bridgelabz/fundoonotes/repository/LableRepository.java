@@ -15,8 +15,7 @@ import com.bridgelabz.fundoonotes.model.Lable;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 
-@Component
-@Repository
+ @Repository
 public class LableRepository {
 	@Autowired
 	private EntityManager entitymanager;

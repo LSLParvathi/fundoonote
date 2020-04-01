@@ -1,15 +1,16 @@
+ 
 package com.bridgelabz.fundoonotes.Exceptions;
-public class UserException 
+public class NoteException 
 {
 
 	private Object data;
 	private int status;
 	private String message;
 	
-	public UserException() {
+	public NoteException() {
 		 
 	}
-	public UserException(Object data, int status, String message) {
+	public NoteException(Object data, int status, String message) {
 		 
 		this.setData(data);
 		this.setStatus(status);
@@ -34,4 +35,3 @@ public class UserException
 		this.message = message;
 	}
 }
-

@@ -14,8 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.bridgelabz.fundoonotes.model.User;
 
-@Component
-@Repository
+ @Repository
 public class UserRepository {
 	@Autowired
 	private EntityManager entitymanager;
