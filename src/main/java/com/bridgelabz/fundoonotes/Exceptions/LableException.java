@@ -1,14 +1,10 @@
-package com.bridgelabz.fundoonotes.utilis;
+package com.bridgelabz.fundoonotes.Exceptions;
 
-public class UserResponse   {
-	
+public class LableException extends Exception {
+
 	private Object data;
 	private int status;
 	private String message;
-
-	public UserResponse() {
-
-	}
 
 	public Object getData() {
 		return data;
@@ -34,21 +30,18 @@ public class UserResponse   {
 		this.message = message;
 	}
 
-	public UserResponse(Object data, int status, String message) {
-	 
+	public LableException(int status, String message) {
+		this.status = status;
+		this.message = message;
+	}
+
+	public LableException(Object data, int status, String message) {
 		this.data = data;
 		this.status = status;
 		this.message = message;
 	}
 
-	public UserResponse(int status, String message) {
-		 
-		this.status = status;
-		this.message = message;
+	public LableException() {
 	}
-	
-	
-	
 
-	 
 }

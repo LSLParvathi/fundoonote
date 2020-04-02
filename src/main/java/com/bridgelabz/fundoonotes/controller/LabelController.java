@@ -15,56 +15,60 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
 import com.bridgelabz.fundoonotes.DTO.UpdateLable;
+import com.bridgelabz.fundoonotes.Exceptions.LableException;
+import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
+import com.bridgelabz.fundoonotes.Response.Genericresponse;
 import com.bridgelabz.fundoonotes.model.Lable;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.service.LableService;
-import com.bridgelabz.fundoonotes.utilis.UserResponse;
 
 @RestController
 public class LabelController {
 	@Autowired
-	private LableService lableservice; 
+	private LableService lableservice;
 
 	@PostMapping("/createlable/{token}")
-	public ResponseEntity<UserResponse> createLable(@PathVariable("token") String token,
-			@RequestBody  NoteDto notedto) { 
+	public ResponseEntity<Genericresponse> createLable(@PathVariable("token") String token,
+			@RequestBody NoteDto notedto) throws LableException {
 		Lable lable = lableservice.createLable(notedto, token);
 		return ResponseEntity.status(HttpStatus.ACCEPTED)
-				.body(new UserResponse(lable, 200, "new lable is created successfully"));
+				.body(new Genericresponse(lable, 200, "new lable is created successfully"));
 	}
-	
+
 	@PostMapping("/AddlableTonNote/{token}/{note_id}/{lable_id}")
-	public ResponseEntity<UserResponse> AddLableToNote(@PathVariable("token") String token ,@PathVariable Long note_id,@PathVariable Long lable_id) { 
-		 Note note = lableservice.AddLableToNote( token,note_id,lable_id);
+	public ResponseEntity<Genericresponse> AddLableToNote(@PathVariable("token") String token,
+			@PathVariable Long note_id, @PathVariable Long lable_id) throws NoteExceptions, LableException {
+		Note note = lableservice.AddLableToNote(token, note_id, lable_id);
 		return ResponseEntity.status(HttpStatus.ACCEPTED)
-				.body(new UserResponse( note, 200, "new lable is created successfully"));
+				.body(new Genericresponse(note, 200, "new lable is created successfully"));
 	}
 
 	@GetMapping("/getlables")
-	public ResponseEntity<UserResponse> GetAllLables() {
+	public ResponseEntity<Genericresponse> GetAllLables() {
 		List<Lable> lable = lableservice.getallLables();
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(lable, 200, "current lables list"));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Genericresponse(lable, 200, "current lables list"));
 
 	}
 
 	@PutMapping("/updateLable/{id}")
-	public ResponseEntity<UserResponse> Updatelable(@PathVariable Long id, @RequestBody UpdateLable updatelable) {
+	public ResponseEntity<Genericresponse> Updatelable(@PathVariable Long id, @RequestBody UpdateLable updatelable) throws LableException {
 		Lable lable = lableservice.updateLables(updatelable, id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(lable, 200, "lable is updated"));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Genericresponse(lable, 200, "lable is updated"));
 
 	}
 
 	@DeleteMapping("/deletelable/{id}")
-	public ResponseEntity<UserResponse> deletelable(@PathVariable Long id) {
+	public ResponseEntity<Genericresponse> deletelable(@PathVariable Long id) throws LableException {
 		lableservice.deleteLables(id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "lable is deleted"));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Genericresponse(200, "lable is deleted"));
 
 	}
-	
+
 	@DeleteMapping("/deletelablefromNote/{note_id}/{lable_id}")
-	public ResponseEntity<UserResponse> deleteLablefromNote(@PathVariable Long note_id,@PathVariable Long lable_id) {
-		lableservice.deleteLablesFromNote(note_id,lable_id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new UserResponse(200, "lable is deleted"));
+	public ResponseEntity<Genericresponse> deleteLablefromNote(@PathVariable Long note_id, @PathVariable Long lable_id)
+			throws NoteExceptions, LableException {
+		lableservice.deleteLablesFromNote(note_id, lable_id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Genericresponse(200, "lable is deleted"));
 
 	}
 }

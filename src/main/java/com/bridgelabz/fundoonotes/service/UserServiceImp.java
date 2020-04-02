@@ -27,8 +27,8 @@ public class UserServiceImp implements UserService {
 	@Autowired
 	private JWToperations ope;
 	@Autowired
-	private JMSoperations ope1; 
-    User user = new User();
+	private JMSoperations ope1;
+	User user = new User();
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserServiceImp.class);
 
@@ -38,7 +38,7 @@ public class UserServiceImp implements UserService {
 		BeanUtils.copyProperties(userdto, user);
 		boolean n = userrepository.IfEmailExists(user.getEmail()).isPresent();
 		if (n == true) {
-			throw new UserExceptions(null, 404, "email already exists");
+			throw new UserExceptions(404, "email already exists");
 		} else {
 			BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 			String newpwd = by.encode(user.getPassword());
@@ -58,7 +58,7 @@ public class UserServiceImp implements UserService {
 	@Override
 	public String userlogin(UserInformation userinformation) {
 		User user = userrepository.IfEmailExists(userinformation.getEmail())
-				.orElseThrow(() -> new UserExceptions(null, 404, "email does not exists"));
+				.orElseThrow(() -> new UserExceptions(404, "email does not exists"));
 		Long id = user.getId();
 		String token = ope.JWTToken(id);
 		String password = userinformation.getPassword();
@@ -68,7 +68,7 @@ public class UserServiceImp implements UserService {
 		if (c == true) {
 			return token;
 		} else {
-			throw new UserExceptions(null, 404, "password is incorrect");
+			throw new UserExceptions(404, "password is incorrect");
 		}
 	}
 
@@ -77,14 +77,14 @@ public class UserServiceImp implements UserService {
 	public List<User> getall() {
 		List<User> user = userrepository.get();
 		if (user == null) {
-			throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");
+			throw new UserExceptions(404, "Note is Empty No Data is Existing");
 		}
 		return user;
 	}
 
 	@Override
 	public User getUserById(Long id) {
-		User user = userrepository.get(id).orElseThrow(() -> new UserExceptions(null, 404, "no data is existing"));
+		User user = userrepository.get(id).orElseThrow(() -> new UserExceptions(404, "no data is existing"));
 		return user;
 	}
 
@@ -134,14 +134,14 @@ public class UserServiceImp implements UserService {
 			userrepository.saveUser(user);
 			return user;
 		}
-		throw new UserExceptions(null, 404, "password is not matching");
+		throw new UserExceptions(404, "password is not matching");
 	}
 
 	@Transactional
 	@Override
 	public User getUserByMail(String mail) {
 		User user = userrepository.getUserByMail(mail)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such user exists"));
+				.orElseThrow(() -> new UserExceptions(404, "no such user exists"));
 		return user;
 	}
 

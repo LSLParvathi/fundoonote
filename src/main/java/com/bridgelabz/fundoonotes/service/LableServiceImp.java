@@ -10,7 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
 import com.bridgelabz.fundoonotes.DTO.UpdateLable;
-import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
+import com.bridgelabz.fundoonotes.Exceptions.LableException;
+import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Lable;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
@@ -37,16 +38,16 @@ public class LableServiceImp implements LableService {
 	public List<Lable> getallLables() {
 		List<Lable> lable = lablerepository.getAllLables();
 		if (lable == null) {
-			new UserExceptions(null, 404, "no data is existing");
+			new LableException(404, "no data is existing");
 		}
 		return lable;
 	}
 
 	@Transactional
 	@Override
-	public Note AddLableToNote(String token, Long note_id, Long lable_id) {
+	public Note AddLableToNote(String token, Long note_id, Long lable_id) throws NoteExceptions, LableException {
 		Lable lable = lablerepository.getById(lable_id)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such id is existing"));
+				.orElseThrow(() -> new LableException(404, "no such id is existing"));
 		Note note = noteservice.getNoteById(note_id);
 		note.getLable().add(lable);
 		return note;
@@ -54,13 +55,13 @@ public class LableServiceImp implements LableService {
 
 	@Transactional
 	@Override
-	public Lable createLable(NoteDto notedto, String token) {
+	public Lable createLable(NoteDto notedto, String token) throws LableException {
 		String title = notedto.getTitle();
 		boolean Title = lablerepository.getLableByTitle(title).isPresent();
 		Long id = ope.parseJWT(token);
 		User user = userservice.getUserById(id);
 		if (Title == true) {
-			throw new UserExceptions(null, 404, "title is already existing");
+			throw new LableException(404, "title is already existing");
 		} else {
 			Lable lable = new Lable();
 			BeanUtils.copyProperties(notedto, lable);
@@ -75,9 +76,8 @@ public class LableServiceImp implements LableService {
 
 	@Transactional
 	@Override
-	public Lable updateLables(UpdateLable updatelable, Long id) {
-		Lable lable = lablerepository.getById(id)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such id is existing"));
+	public Lable updateLables(UpdateLable updatelable, Long id) throws LableException {
+		Lable lable = lablerepository.getById(id).orElseThrow(() -> new LableException(404, "no such id is existing"));
 		BeanUtils.copyProperties(updatelable, lable);
 		lable.setUpdatedate(LocalDateTime.now());
 		lablerepository.saveLable(lable);
@@ -86,17 +86,16 @@ public class LableServiceImp implements LableService {
 
 	@Transactional
 	@Override
-	public void deleteLables(Long id) {
-		Lable lable = lablerepository.getById(id)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such id is existing"));
+	public void deleteLables(Long id) throws LableException {
+		Lable lable = lablerepository.getById(id).orElseThrow(() -> new LableException(404, "no such id is existing"));
 		lablerepository.deleteLable(lable);
 	}
 
 	@Transactional
 	@Override
-	public void deleteLablesFromNote(Long note_id, Long lable_id) {
+	public void deleteLablesFromNote(Long note_id, Long lable_id) throws NoteExceptions, LableException {
 		Lable lable = lablerepository.getById(lable_id)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such id is existing"));
+				.orElseThrow(() -> new LableException(404, "no such id is existing"));
 		Note note = noteservice.getNoteById(note_id);
 		note.getLable().remove(lable);
 	}

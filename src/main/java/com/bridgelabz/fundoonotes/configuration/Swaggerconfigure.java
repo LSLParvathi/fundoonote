@@ -1,5 +1,4 @@
-
-package com.bridgelabz.fundoonotes.utilis;
+package com.bridgelabz.fundoonotes.configuration;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;

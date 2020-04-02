@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
 import com.bridgelabz.fundoonotes.DTO.SearchNote;
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
-import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
+import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.NoteRepository;
@@ -37,13 +37,13 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note createNote(String token, NoteDto notedto) {
+	public Note createNote(String token, NoteDto notedto) throws NoteExceptions {
 		String title = notedto.getTitle();
 		Long id = ope.parseJWT(token);
 		User user = userservice.getUserById(id);
 		boolean Title = noterepository.getNoteByTitle(title).isPresent();
 		if (Title == true) {
-			throw new UserExceptions(null, 404, "title already exists or Id does not exists");
+			throw new NoteExceptions(404, "title already exists or Id does not exists");
 		} else {
 			BeanUtils.copyProperties(notedto, note);
 			note.setArchive(false);
@@ -59,10 +59,10 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public List<Note> getAllNotes() {
+	public List<Note> getAllNotes() throws NoteExceptions {
 		List<Note> note = noterepository.getAllNotes();
 		if (note == null) {
-			throw new UserExceptions(null, 404, "Note is Empty No Data is Existing");
+			throw new NoteExceptions(404, "Note is Empty No Data is Existing");
 		} else {
 			return note;
 		}
@@ -70,16 +70,16 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note getNoteById(Long note_id) {
+	public Note getNoteById(Long note_id) throws NoteExceptions {
 		Note note = noterepository.getbyId(note_id)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list"));
+				.orElseThrow(() -> new NoteExceptions(404, "no such id in the list"));
 		System.out.println(note);
 		return note;
 	}
 
 	@Transactional
 	@Override
-	public Note updatenote(Long note_id, UpdateNote updatenote) {
+	public Note updatenote(Long note_id, UpdateNote updatenote) throws NoteExceptions {
 		Note note = getNoteById(note_id);
 		List<Note> notes = noterepository.getAllNotes();
 		Note updateNote = (Note) notes.stream().filter(upnote -> upnote.getNote_id().equals(note_id))
@@ -91,7 +91,7 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note Archive(Long note_id) {
+	public Note Archive(Long note_id) throws NoteExceptions {
 		Note note = getNoteById(note_id);
 		boolean s1 = note.isArchive();
 		boolean s2 = note.isPin();
@@ -108,7 +108,7 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note Pinned(Long note_id) {
+	public Note Pinned(Long note_id) throws NoteExceptions {
 		Note note = getNoteById(note_id);
 		boolean s = note.isPin();
 		if (s == true) {
@@ -121,7 +121,7 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public void deleteNote(Long note_id) {
+	public void deleteNote(Long note_id) throws NoteExceptions {
 		Note note = getNoteById(note_id);
 		note.setTrash(true);
 		noterepository.saveNote(note);
@@ -130,7 +130,7 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note remindMe(Long note_id, LocalDateTime remind) {
+	public Note remindMe(Long note_id, LocalDateTime remind) throws NoteExceptions {
 		Note note = getNoteById(note_id);
 		note.setRemindme(remind);
 		noterepository.saveNote(note);
@@ -139,7 +139,7 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public void deleteRem(Long note_id) {
+	public void deleteRem(Long note_id) throws NoteExceptions {
 		Note note = getNoteById(note_id);
 		note.setRemindme(LocalDateTime.now());
 		noterepository.saveNote(note);
@@ -147,12 +147,12 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public ArrayList<Note> getNotesByTitleAndDescription(SearchNote searchnote) {
+	public ArrayList<Note> getNotesByTitleAndDescription(SearchNote searchnote) throws NoteExceptions {
 		String title = searchnote.getTitle();
 		System.out.println("wlecome");
 		String description = searchnote.getDescription();
 		Note note = noterepository.searchNoteByTitleAndDescription(title, description)
-				.orElseThrow(() -> new UserExceptions(null, 404, "no such id in the list"));
+				.orElseThrow(() -> new NoteExceptions(404, "no such id in the list"));
 		return null;
 	}
 

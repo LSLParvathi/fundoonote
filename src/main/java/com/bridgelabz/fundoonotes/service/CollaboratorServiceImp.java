@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
+
+import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.NoteRepository;
@@ -26,7 +28,7 @@ public class CollaboratorServiceImp implements CollaboratorService {
 
 	@Transactional
 	@Override
-	public Note AddCol(String email, Long id, String token) {
+	public Note AddCol(String email, Long id, String token) throws NoteExceptions {
 		Long Id = ope.parseJWT(token);
 		User user1 = userservice.getUserById(Id);
 		Note note = noteservice.getNoteById(id);
@@ -39,7 +41,7 @@ public class CollaboratorServiceImp implements CollaboratorService {
 
 	@Transactional
 	@Override
-	public void delCollaborator(String email, String token, Long id) {
+	public void delCollaborator(String email, String token, Long id) throws NoteExceptions {
 		Long Id = ope.parseJWT(token);
 		User user1 = userservice.getUserById(Id);
 		Note note = noteservice.getNoteById(id);
@@ -49,7 +51,7 @@ public class CollaboratorServiceImp implements CollaboratorService {
 
 	@Transactional
 	@Override
-	public List<User> getAllColl(String token, Long id) {
+	public List<User> getAllColl(String token, Long id) throws NoteExceptions {
 		Long Id = ope.parseJWT(token);
 		User user1 = userservice.getUserById(Id);
 		Note note = noteservice.getNoteById(id);
