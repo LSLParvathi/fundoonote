@@ -31,16 +31,21 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	@NotNull(message = "firstname is required")
+	@NotNull
+	//(message = "firstname is required")
 	private String firstname;
-	@NotNull(message = "lastname is required")
+	@NotNull
+	//(message = "lastname is required")
 	private String lastname;
-	@NotNull(message = "mobilenumber is required")
-	@Size(min = 10, max = 10)
+	@NotNull
+	//(message = "mobilenumber is required")
+	//@Size(min = 10, max = 10)
 	private String mobilenumber;
-	@Email(message = "email is required")
+	@Email
+	//(message = "email is required")
 	private String email;
-	@NotNull(message = "password is required")
+	@NotNull
+	//(message = "password is required")
 	private String password;
 
 	private Boolean verify = false;

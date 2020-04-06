@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.service;
 
+import java.io.IOException;
 import java.util.List;
 
 import com.bridgelabz.fundoonotes.DTO.Updatepassword;
@@ -10,7 +11,7 @@ import com.bridgelabz.fundoonotes.model.User;
 
 public interface UserService {
 
-	User register(UserDTO userdto);
+	User register(UserDTO userdto) throws IOException;
 
 	String userlogin(UserInformation userinformation);
 

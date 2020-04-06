@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,19 +32,22 @@ public class NoteServiceImp implements NoteService {
 	private JWToperations ope;
 	@Autowired
 	private NoteService noteservice;
-	Note note = new Note();
-	@Autowired
+ 	@Autowired
 	private UserService userservice;
+	@Autowired
+	private Environment env;
+	
 
 	@Transactional
 	@Override
 	public Note createNote(String token, NoteDto notedto) throws NoteExceptions {
+		Note note = new Note(); 
 		String title = notedto.getTitle();
 		Long id = ope.parseJWT(token);
 		User user = userservice.getUserById(id);
 		boolean Title = noterepository.getNoteByTitle(title).isPresent();
 		if (Title == true) {
-			throw new NoteExceptions(404, "title already exists or Id does not exists");
+			throw new NoteExceptions(404,env.getProperty("exists"));
 		} else {
 			BeanUtils.copyProperties(notedto, note);
 			note.setArchive(false);
@@ -62,7 +66,7 @@ public class NoteServiceImp implements NoteService {
 	public List<Note> getAllNotes() throws NoteExceptions {
 		List<Note> note = noterepository.getAllNotes();
 		if (note == null) {
-			throw new NoteExceptions(404, "Note is Empty No Data is Existing");
+			throw new NoteExceptions(404, env.getProperty("nodata"));
 		} else {
 			return note;
 		}
@@ -72,7 +76,7 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public Note getNoteById(Long note_id) throws NoteExceptions {
 		Note note = noterepository.getbyId(note_id)
-				.orElseThrow(() -> new NoteExceptions(404, "no such id in the list"));
+				.orElseThrow(() -> new NoteExceptions(404,env.getProperty("notexist")));
 		System.out.println(note);
 		return note;
 	}
@@ -152,7 +156,7 @@ public class NoteServiceImp implements NoteService {
 		System.out.println("wlecome");
 		String description = searchnote.getDescription();
 		Note note = noterepository.searchNoteByTitleAndDescription(title, description)
-				.orElseThrow(() -> new NoteExceptions(404, "no such id in the list"));
+				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		return null;
 	}
 

@@ -18,9 +18,7 @@ public class CollaboratorServiceImp implements CollaboratorService {
 	@Autowired
 	private NoteServiceImp noteservice;
 	@Autowired
-	private UserService userservice;
-	Note note = new Note();
-	User user = new User();
+	private UserService userservice; 
 	@Autowired
 	private JWToperations ope;
 	@Autowired
