@@ -115,7 +115,8 @@ public class UserController {
 		this.amazonS3Service.uploadFileToS3Bucket(file, true);
 		Map<String, String> response = new HashMap<>();
 		String filename=file.getOriginalFilename();
-		response.put("message", "file [" + filename + "] uploading request submitted successfully."); return response;
+		response.put("message", "file [" + filename + "] uploading request submitted successfully.");
+		return response;
 	}
 
 	@DeleteMapping("/deleteprofilepic")

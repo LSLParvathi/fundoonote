@@ -58,6 +58,13 @@ public class NoteRepository {
 	}
 
 	public Optional<Note> searchNoteByTitleAndDescription(String title, String description) {
+		/*
+		 * Session currentsession = entitymanager.unwrap(Session.class); FullTextSession
+		 * fullTextSession = Search.getFullTextSession(currentsession); QueryDescriptor
+		 * query = ElasticsearchQueries.fromQueryString("title:title"); List<Note> note
+		 * = fullTextSession.createFullTextQuery(query, Note.class).list(); return
+		 * (Note) note;
+		 */
 		Session currentsession = entitymanager.unwrap(Session.class);
 		FullTextEntityManager em = org.hibernate.search.jpa.Search.getFullTextEntityManager(entitymanager);
 		em.getSearchFactory().buildQueryBuilder().forEntity(Note.class).get().keyword().onFields("title", "description")
@@ -67,6 +74,7 @@ public class NoteRepository {
 					.setParameter("description", description).setParameter("title", title).uniqueResultOptional();
 		}
 		return null;
+
 	}
 
 }

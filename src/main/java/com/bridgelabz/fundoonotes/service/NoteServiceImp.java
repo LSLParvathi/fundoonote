@@ -151,13 +151,13 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public ArrayList<Note> getNotesByTitleAndDescription(SearchNote searchnote) throws NoteExceptions {
-		String title = searchnote.getTitle();
-		System.out.println("wlecome");
+	public List<Note> getNotesByTitleAndDescription(SearchNote searchnote) throws NoteExceptions {
+		String title = searchnote.getTitle(); 
 		String description = searchnote.getDescription();
 		Note note = noterepository.searchNoteByTitleAndDescription(title, description)
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
-		return null;
+		  List<Note> note1 = ( List)note;
+		return note1;
 	}
 
 }
