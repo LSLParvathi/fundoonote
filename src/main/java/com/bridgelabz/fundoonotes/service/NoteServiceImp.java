@@ -1,7 +1,6 @@
 package com.bridgelabz.fundoonotes.service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -12,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.SearchNote;
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
@@ -36,6 +34,8 @@ public class NoteServiceImp implements NoteService {
 	private UserService userservice;
 	@Autowired
 	private Environment env;
+	@Autowired
+	private ElasticSearchService elasticsearchservice;
 
 	@Transactional
 	@Override
@@ -147,12 +147,13 @@ public class NoteServiceImp implements NoteService {
 		note.setRemindme(LocalDateTime.now());
 		noterepository.saveNote(note);
 	}
-
+	
 	@Transactional
 	@Override
 	public List<Note> getNotesByTitleAndDescription(String text) throws NoteExceptions {
-		List<Note> note = noterepository.searchNoteByTitleAndDescription(text);
+		List<Note> note =  elasticsearchservice.getNoteByTitleAndDescription(text);
 		return note;
 	}
+
 
 }

@@ -16,49 +16,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ElasticsearchConfig extends AbstractFactoryBean{
+public class ElasticsearchConfig  {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ElasticsearchConfig.class);
-    @Value("${spring.data.elasticsearch.cluster-nodes}")
-    private String clusterNodes;
-    @Value("${spring.data.elasticsearch.cluster-name}")
-    private String clusterName;
-    private RestHighLevelClient restHighLevelClient;
+	 @Bean(destroyMethod = "close")
+	    public RestHighLevelClient client()  {
 
-    @Override
-    public void destroy() {
-        try {
-            if (restHighLevelClient != null) {
-                restHighLevelClient.close();
-            }
-        } catch (final Exception e) {
-            LOG.error("Error closing ElasticSearch client: ", e);
-        }
-    }
-
-    @Override
-    public Class<RestHighLevelClient> getObjectType() {
-        return RestHighLevelClient.class;
-    }
-
-    @Override
-    public boolean isSingleton() {
-        return false;
-    }
-
-    @Override
-    public RestHighLevelClient createInstance() {
-        return buildClient();
-    }
-
-    private RestHighLevelClient buildClient() {
-        try {
-            restHighLevelClient = new RestHighLevelClient(
-                    RestClient.builder(
-                            new HttpHost("localhost", 9200, "http"),
-                            new HttpHost("localhost", 9201, "http")));
-        } catch (Exception e) {
-            LOG.error(e.getMessage());
-        }
-        return restHighLevelClient;
-    }}
+	        RestHighLevelClient client=new RestHighLevelClient(RestClient.builder(new HttpHost("localhost",9200,"http")));
+	        return client;
+	    }
+	     }

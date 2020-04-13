@@ -113,7 +113,7 @@ public class NoteController {
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204, env.getProperty("deletereminder")));
 
 	}
-
+	
 	@GetMapping("/GetAllNotesByTitleAndDescription/{text}")
 	public ResponseEntity<Response> getNotesBYTitleAndDescription(@PathVariable String text,
 			@RequestHeader("token") String token) throws Exception {
