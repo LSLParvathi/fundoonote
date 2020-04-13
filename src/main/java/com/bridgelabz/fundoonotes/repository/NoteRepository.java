@@ -1,21 +1,35 @@
 package com.bridgelabz.fundoonotes.repository;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import javax.persistence.EntityManager;
 
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
+import org.elasticsearch.index.mapper.ObjectMapper;
+import org.elasticsearch.index.query.QueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import org.hibernate.search.jpa.FullTextEntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.bridgelabz.fundoonotes.model.Note;
+import com.bridgelabz.fundoonotes.utilis.Constant;
 
 @Repository
 public class NoteRepository {
 
+	private RestHighLevelClient client;
+	private ObjectMapper objectMapper;
 	@Autowired
 	private EntityManager entitymanager;
 
@@ -57,24 +71,42 @@ public class NoteRepository {
 		return note;
 	}
 
-	public Optional<Note> searchNoteByTitleAndDescription(String title, String description) {
-		/*
-		 * Session currentsession = entitymanager.unwrap(Session.class); FullTextSession
-		 * fullTextSession = Search.getFullTextSession(currentsession); QueryDescriptor
-		 * query = ElasticsearchQueries.fromQueryString("title:title"); List<Note> note
-		 * = fullTextSession.createFullTextQuery(query, Note.class).list(); return
-		 * (Note) note;
-		 */
-		Session currentsession = entitymanager.unwrap(Session.class);
-		FullTextEntityManager em = org.hibernate.search.jpa.Search.getFullTextEntityManager(entitymanager);
-		em.getSearchFactory().buildQueryBuilder().forEntity(Note.class).get().keyword().onFields("title", "description")
-				.ignoreFieldBridge().ignoreAnalyzer().matching(title).createQuery();
-		if (Boolean.TRUE) {
-			return currentsession.createQuery("from Note where title=:title and description=:description")
-					.setParameter("description", description).setParameter("title", title).uniqueResultOptional();
+	public List<Note> searchNoteByTitleAndDescription(String text) {
+		SearchRequest searchRequest = new SearchRequest();
+		searchRequest.indices(Constant.INDEX);
+		searchRequest.types(Constant.TYPE);
+		SearchSourceBuilder searchSourceBuilder = new SearchSourceBuilder();
+		QueryBuilder query = QueryBuilders.boolQuery()
+				.should(QueryBuilders.queryStringQuery(text).lenient(true).field("title").field("description"))
+				.should(QueryBuilders.queryStringQuery("*" + text + "*").lenient(true).field("title")
+						.field("description"));
+		searchSourceBuilder.query(query);
+		searchRequest.source(searchSourceBuilder);
+		SearchResponse searchResponse = null;
+		try {
+			searchResponse = client.search(searchRequest, RequestOptions.DEFAULT);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		return null;
+		return (List<Note>)searchResponse;
+	}
 
+	/*
+	 * private List<Note> getSearchResult(SearchResponse searchResponse) {
+	 * SearchHit[] searchHits = searchResponse.getHits().getHits(); List<Note> note
+	 * = new ArrayList<Note>(); if (searchHits.length > 0) {
+	 * Arrays.stream(searchHits) .forEach(hit -> note.add(((Object)
+	 * objectMapper).convertValue(hit.getSourceAsMap(), Note.class))); } return
+	 * note; }
+	 */
+
+	private SearchRequest buildSearchRequest(String index, String type) {
+
+		SearchRequest searchRequest = new SearchRequest();
+		searchRequest.indices(index);
+		searchRequest.types(type);
+
+		return searchRequest;
 	}
 
 }

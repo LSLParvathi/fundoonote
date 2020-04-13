@@ -37,4 +37,7 @@ public class Response {
 		this.message = message;
 	}
 
+	public Response(String user, String urlPath, int i, String property) {
+ 	}
+
 }

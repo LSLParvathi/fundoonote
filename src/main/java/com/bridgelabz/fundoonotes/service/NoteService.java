@@ -30,6 +30,7 @@ public interface NoteService {
 
 	Note remindMe(Long note_id, LocalDateTime remind) throws NoteExceptions;
 
-	void deleteRem(Long note_id) throws NoteExceptions; 
-	List<Note> getNotesByTitleAndDescription(SearchNote searchnote) throws NoteExceptions;
+	void deleteRem(Long note_id) throws NoteExceptions;  
+	
+	List<Note> getNotesByTitleAndDescription(String text) throws NoteExceptions, Exception;
 }

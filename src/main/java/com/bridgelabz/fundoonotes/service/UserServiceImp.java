@@ -20,10 +20,12 @@ import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.utilis.JMSoperations;
 import com.bridgelabz.fundoonotes.utilis.JWToperations;
+import com.bridgelabz.fundoonotes.utilis.RabbitProducer;
 
 @Service
 public class UserServiceImp implements UserService {
 
+	private RabbitProducer producer;
 	@Autowired
 	private UserRepository userrepository;
 	@Autowired
@@ -54,6 +56,7 @@ public class UserServiceImp implements UserService {
 		userrepository.save(user);
 		log.info("The user has successfully logged in " + user);
 		String str = env.getProperty("url") + ope.JWTToken(user.getId());
+		producer.produceMsg(str);
 		ope1.sendEmail(user.getEmail(), env.getProperty("Verifyemail"), str);
 		return user;
 

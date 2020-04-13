@@ -69,7 +69,7 @@ public class UserController {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response(result.getAllErrors()));
 		}
 		String user = userservice.userlogin(userinformation);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(user, 202, env.getProperty("login")));
+ 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(user,  202, env.getProperty("login")));
 
 	}
 
@@ -111,20 +111,22 @@ public class UserController {
 	}
 
 	@PostMapping("/addprofilepic")
-	public Map<String, String> uploadFile(@RequestPart(value = "file") MultipartFile file) {
+	public ResponseEntity<Response> uploadFile(@RequestPart(value = "file") MultipartFile file) {
 		this.amazonS3Service.uploadFileToS3Bucket(file, true);
 		Map<String, String> response = new HashMap<>();
 		String filename=file.getOriginalFilename();
-		response.put("message", "file [" + filename + "] uploading request submitted successfully.");
-		return response;
+		response.put("message", "file [" + filename + "] uploading request submitted successfully."); 
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(response, 200, env.getProperty("uploadpic")));
+
 	}
 
 	@DeleteMapping("/deleteprofilepic")
-	public Map<String, String> deleteFile(@RequestParam("file_name") String fileName) {
+	public ResponseEntity<Response> deleteFile(@RequestParam("file_name") String fileName) {
 		this.amazonS3Service.deleteFileFromS3Bucket(fileName); 
 		Map<String, String> response = new HashMap<>();
 		response.put("message", "file [" + fileName + "] removing request submitted successfully.");
-		return response;
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(response, 200, env.getProperty("uploadpic")));
 	}
 
+	 
 }

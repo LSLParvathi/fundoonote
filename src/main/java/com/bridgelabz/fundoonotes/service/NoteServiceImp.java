@@ -32,22 +32,21 @@ public class NoteServiceImp implements NoteService {
 	private JWToperations ope;
 	@Autowired
 	private NoteService noteservice;
- 	@Autowired
+	@Autowired
 	private UserService userservice;
 	@Autowired
 	private Environment env;
-	
 
 	@Transactional
 	@Override
 	public Note createNote(String token, NoteDto notedto) throws NoteExceptions {
-		Note note = new Note(); 
+		Note note = new Note();
 		String title = notedto.getTitle();
 		Long id = ope.parseJWT(token);
 		User user = userservice.getUserById(id);
 		boolean Title = noterepository.getNoteByTitle(title).isPresent();
 		if (Title == true) {
-			throw new NoteExceptions(404,env.getProperty("exists"));
+			throw new NoteExceptions(404, env.getProperty("exists"));
 		} else {
 			BeanUtils.copyProperties(notedto, note);
 			note.setArchive(false);
@@ -76,7 +75,7 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public Note getNoteById(Long note_id) throws NoteExceptions {
 		Note note = noterepository.getbyId(note_id)
-				.orElseThrow(() -> new NoteExceptions(404,env.getProperty("notexist")));
+				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		System.out.println(note);
 		return note;
 	}
@@ -151,13 +150,9 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public List<Note> getNotesByTitleAndDescription(SearchNote searchnote) throws NoteExceptions {
-		String title = searchnote.getTitle(); 
-		String description = searchnote.getDescription();
-		Note note = noterepository.searchNoteByTitleAndDescription(title, description)
-				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
-		  List<Note> note1 = ( List)note;
-		return note1;
+	public List<Note> getNotesByTitleAndDescription(String text) throws NoteExceptions {
+		List<Note> note = noterepository.searchNoteByTitleAndDescription(text);
+		return note;
 	}
 
 }
