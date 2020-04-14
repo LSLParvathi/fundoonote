@@ -20,12 +20,12 @@ import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.utilis.JMSoperations;
 import com.bridgelabz.fundoonotes.utilis.JWToperations;
-import com.bridgelabz.fundoonotes.utilis.RabbitProducer;
+import com.bridgelabz.fundoonotes.utilis.RabbitMqSender;
 
 @Service
 public class UserServiceImp implements UserService {
 
-	private RabbitProducer producer;
+	private RabbitMqSender  rabbitmqsender;
 	@Autowired
 	private UserRepository userrepository;
 	@Autowired
@@ -54,9 +54,11 @@ public class UserServiceImp implements UserService {
 		user.setUpdatedate(LocalDateTime.now());
 		user.setVerify(false);
 		userrepository.save(user);
+		String email = user.getEmail();
 		log.info("The user has successfully logged in " + user);
 		String str = env.getProperty("url") + ope.JWTToken(user.getId());
-		producer.produceMsg(str);
+		rabbitmqsender.send(email);
+		rabbitmqsender.Reciver(email);
 		ope1.sendEmail(user.getEmail(), env.getProperty("Verifyemail"), str);
 		return user;
 
@@ -84,14 +86,14 @@ public class UserServiceImp implements UserService {
 	public List<User> getall() {
 		List<User> user = userrepository.get();
 		if (user == null) {
-			throw new UserExceptions(404,env.getProperty("nodata"));
+			throw new UserExceptions(404, env.getProperty("nodata"));
 		}
 		return user;
 	}
 
 	@Override
 	public User getUserById(Long id) {
-		User user = userrepository.get(id).orElseThrow(() -> new UserExceptions(404,env.getProperty("nodata")));
+		User user = userrepository.get(id).orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		return user;
 	}
 
@@ -141,14 +143,14 @@ public class UserServiceImp implements UserService {
 			userrepository.saveUser(user);
 			return user;
 		}
-		throw new UserExceptions(404,env.getProperty("incorrect"));
+		throw new UserExceptions(404, env.getProperty("incorrect"));
 	}
 
 	@Transactional
 	@Override
 	public User getUserByMail(String mail) {
 		User user = userrepository.getUserByMail(mail)
-				.orElseThrow(() -> new UserExceptions(404,env.getProperty("notexist")));
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("notexist")));
 		return user;
 	}
 

@@ -12,20 +12,19 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
-import org.springframework.stereotype.Indexed;
-
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-@Indexed
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "noteTable")
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class,scope = Note.class)
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, scope = Note.class)
 
 public class Note {
 
@@ -37,8 +36,8 @@ public class Note {
 	private boolean trash;
 	private String colours;
 	private LocalDateTime remindme;
- 	private String title;
- 	private String description;
+	private String title;
+	private String description;
 
 	@ManyToMany(cascade = { CascadeType.MERGE }, fetch = FetchType.LAZY)
 	private List<Lable> lable;
