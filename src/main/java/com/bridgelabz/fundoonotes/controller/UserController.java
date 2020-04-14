@@ -78,6 +78,15 @@ public class UserController {
 		List<User> user = userservice.getall();
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(user, 200, env.getProperty("list")));
 	}
+	
+	@PostMapping(value = "/getimageurl/{token}")
+	public ResponseEntity<Response> imageurl(@PathVariable String token) {
+		
+		User url = userservice.getImageUrl(token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED)
+				.body(new Response(url,200,env.getProperty("list")));
+
+	}
 
 	@GetMapping("/get/{id}")
 	public ResponseEntity<Response> get(@PathVariable Long id) {
@@ -110,9 +119,9 @@ public class UserController {
 
 	}
 
-	@PostMapping("/addprofilepic")
-	public ResponseEntity<Response> uploadFile(@RequestPart(value = "file") MultipartFile file) {
-		this.amazonS3Service.uploadFileToS3Bucket(file, true);
+	@PostMapping("/addprofilepic/{token}")
+	public ResponseEntity<Response> uploadFile(@RequestPart(value = "file") MultipartFile file,@PathVariable String token) {
+		this.amazonS3Service.uploadFileToS3Bucket(file, true,token);
 		Map<String, String> response = new HashMap<>();
 		String filename=file.getOriginalFilename();
 		response.put("message", "file [" + filename + "] uploading request submitted successfully."); 
@@ -121,8 +130,8 @@ public class UserController {
 	}
 
 	@DeleteMapping("/deleteprofilepic")
-	public ResponseEntity<Response> deleteFile(@RequestParam("file_name") String fileName) {
-		this.amazonS3Service.deleteFileFromS3Bucket(fileName); 
+	public ResponseEntity<Response> deleteFile(@RequestParam("file_name") String fileName,@RequestPart("token") String token) {
+		this.amazonS3Service.deleteFileFromS3Bucket(fileName,token); 
 		Map<String, String> response = new HashMap<>();
 		response.put("message", "file [" + fileName + "] removing request submitted successfully.");
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(response, 200, env.getProperty("uploadpic")));

@@ -28,4 +28,6 @@ public interface UserService {
 	User setnewpassword(Updatepassword updatepassword);
 
 	User getUserByMail(String mail);
+
+	User getImageUrl(String token);
 }

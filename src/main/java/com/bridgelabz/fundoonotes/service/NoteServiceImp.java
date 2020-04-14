@@ -1,5 +1,6 @@
 package com.bridgelabz.fundoonotes.service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -45,9 +46,8 @@ public class NoteServiceImp implements NoteService {
 		Long id = ope.parseJWT(token);
 		User user = userservice.getUserById(id);
 		boolean Title = noterepository.getNoteByTitle(title).isPresent();
-		if (Title == true) {
+		if (Title == true) 
 			throw new NoteExceptions(404, env.getProperty("exists"));
-		} else {
 			BeanUtils.copyProperties(notedto, note);
 			note.setArchive(false);
 			note.setColours("black");
@@ -56,9 +56,14 @@ public class NoteServiceImp implements NoteService {
 			note.setTrash(false);
 			user.getNote().add(note);
 			userrepository.save(user);
+			try {
+				elasticsearchservice.createNote(note);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			return note;
 		}
-	}
+	
 
 	@Transactional
 	@Override
@@ -82,13 +87,18 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note updatenote(Long note_id, UpdateNote updatenote) throws NoteExceptions {
+	public Note updatenote(Long note_id, UpdateNote updatenote) throws NoteExceptions  {
 		Note note = getNoteById(note_id);
 		List<Note> notes = noterepository.getAllNotes();
 		Note updateNote = (Note) notes.stream().filter(upnote -> upnote.getNote_id().equals(note_id))
 				.collect(Collectors.toList());
 		// BeanUtils.copyProperties(updatenote, note);
 		noterepository.saveNote(note);
+		try {
+			elasticsearchservice.upDateNote(note);
+		} catch (Exception e) { 
+			e.printStackTrace();
+		}
 		return note;
 	}
 
@@ -129,6 +139,12 @@ public class NoteServiceImp implements NoteService {
 		note.setTrash(true);
 		noterepository.saveNote(note);
 		noterepository.deletenote(note);
+		try {
+			elasticsearchservice.deleteNote(String.valueOf(note_id));
+		} catch (IOException e) { 
+			e.printStackTrace();
+		}
+
 	}
 
 	@Transactional

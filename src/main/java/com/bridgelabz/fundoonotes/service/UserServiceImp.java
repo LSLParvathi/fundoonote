@@ -154,4 +154,15 @@ public class UserServiceImp implements UserService {
 		return user;
 	}
 
+	@Override
+	public User getImageUrl(String token) {
+		Long id = ope.parseJWT(token); 
+		User url = userrepository.findUserByProfile(id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("notexist")));
+		return url;
+	}
+	
+	
+	
+
 }

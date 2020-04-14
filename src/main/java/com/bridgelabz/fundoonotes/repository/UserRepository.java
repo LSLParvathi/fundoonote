@@ -9,12 +9,11 @@ import javax.persistence.EntityManager;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import com.bridgelabz.fundoonotes.model.User;
 
- @Repository
+@Repository
 public class UserRepository {
 	@Autowired
 	private EntityManager entitymanager;
@@ -71,6 +70,12 @@ public class UserRepository {
 		Query query = currentsession.createQuery("from User");
 		ArrayList<User> user = (ArrayList<User>) query.getResultList();
 		return user;
+	}
+
+	public Optional<User> findUserByProfile(Long id) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		return currentsession.createQuery("from User where id=:id").setParameter("id", id).uniqueResultOptional();
+
 	}
 
 }
