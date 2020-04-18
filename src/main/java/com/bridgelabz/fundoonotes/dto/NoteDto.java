@@ -1,18 +1,17 @@
-package com.bridgelabz.fundoonotes.DTO;
-
-import org.springframework.stereotype.Indexed;
+package com.bridgelabz.fundoonotes.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
+@AllArgsConstructor 
 @NoArgsConstructor
-@AllArgsConstructor
-@Indexed
-public class SearchNote {
+public class NoteDto  {
 
 	private String title;
 	private String description;
-
+	 
+	
 }

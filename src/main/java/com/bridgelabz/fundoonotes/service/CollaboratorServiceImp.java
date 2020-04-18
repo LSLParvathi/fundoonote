@@ -7,8 +7,8 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
-import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
+import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
+import com.bridgelabz.fundoonotes.exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.NoteRepository;

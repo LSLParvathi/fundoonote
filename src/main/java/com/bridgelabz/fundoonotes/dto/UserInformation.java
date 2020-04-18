@@ -1,4 +1,4 @@
-package com.bridgelabz.fundoonotes.DTO;
+package com.bridgelabz.fundoonotes.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,13 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserDTO {
-
-	private String firstname;
-	private String lastname;
-	private String mobilenumber;
+public class UserInformation {
 	private String email;
 	private String password;
-	
-	
+
 }

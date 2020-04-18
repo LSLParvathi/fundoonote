@@ -3,9 +3,9 @@ package com.bridgelabz.fundoonotes.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.UpdateNote;
-import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
+import com.bridgelabz.fundoonotes.dto.NoteDto;
+import com.bridgelabz.fundoonotes.dto.UpdateNote;
+import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 
 public interface NoteService {

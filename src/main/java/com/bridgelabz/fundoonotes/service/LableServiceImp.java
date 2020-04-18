@@ -9,11 +9,11 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bridgelabz.fundoonotes.DTO.LableDto;
-import com.bridgelabz.fundoonotes.DTO.UpdateLable;
-import com.bridgelabz.fundoonotes.Exceptions.LableException;
-import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
-import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
+import com.bridgelabz.fundoonotes.dto.LableDto;
+import com.bridgelabz.fundoonotes.dto.UpdateLable;
+import com.bridgelabz.fundoonotes.exceptions.LableException;
+import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
+import com.bridgelabz.fundoonotes.exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Lable;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;

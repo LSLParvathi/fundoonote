@@ -1,4 +1,4 @@
-package com.bridgelabz.fundoonotes.DTO;
+package com.bridgelabz.fundoonotes.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

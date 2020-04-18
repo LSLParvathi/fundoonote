@@ -1,4 +1,4 @@
-package com.bridgelabz.fundoonotes.Response;
+package com.bridgelabz.fundoonotes.response;
 
 import java.util.List;
 

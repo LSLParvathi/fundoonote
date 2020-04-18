@@ -2,7 +2,7 @@ package com.bridgelabz.fundoonotes.service;
 
 import java.util.List;
 
-import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
+import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 

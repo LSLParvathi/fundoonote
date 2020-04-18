@@ -25,13 +25,13 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.bridgelabz.fundoonotes.DTO.Updatepassword;
-import com.bridgelabz.fundoonotes.DTO.UserDTO;
-import com.bridgelabz.fundoonotes.DTO.UserInformation;
-import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
-import com.bridgelabz.fundoonotes.Response.Response;
+import com.bridgelabz.fundoonotes.dto.Updatepassword;
+import com.bridgelabz.fundoonotes.dto.UserDto;
+import com.bridgelabz.fundoonotes.dto.UserInformation;
+import com.bridgelabz.fundoonotes.exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
+import com.bridgelabz.fundoonotes.response.Response;
 import com.bridgelabz.fundoonotes.service.AmazonS3Service;
 import com.bridgelabz.fundoonotes.service.UserService;
 
@@ -50,7 +50,7 @@ public class UserController {
 	private Environment env;
 
 	@PostMapping("/register")
-	public ResponseEntity<Response> register(@Valid @RequestBody UserDTO userdto, BindingResult result)
+	public ResponseEntity<Response> register(@Valid @RequestBody UserDto userdto, BindingResult result)
 			throws IOException {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response(result.getAllErrors()));

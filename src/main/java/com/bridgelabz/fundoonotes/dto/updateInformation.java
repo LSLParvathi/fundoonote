@@ -1,4 +1,4 @@
-package com.bridgelabz.fundoonotes.DTO;
+package com.bridgelabz.fundoonotes.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,9 +7,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class LableDto {
+public class updateInformation {
 
-	private String title;
-	private String description;
+	private String phonenumber;
+	private String password;
 
 }

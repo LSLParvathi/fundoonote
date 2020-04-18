@@ -9,10 +9,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.UpdateNote;
-import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
-import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
+import com.bridgelabz.fundoonotes.dto.NoteDto;
+import com.bridgelabz.fundoonotes.dto.UpdateNote;
+import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
+import com.bridgelabz.fundoonotes.exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.NoteRepository;
@@ -42,8 +42,7 @@ public class NoteServiceImp implements NoteService {
 		User user = userrepository.getUserById(id)
 				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		BeanUtils.copyProperties(notedto, note);
-		note.setColours("black");
-		note.setRemindme(LocalDateTime.now());
+		note.setColours("black"); 
 		user.getNote().add(note);
 		userrepository.saveUser(user);
 		/*

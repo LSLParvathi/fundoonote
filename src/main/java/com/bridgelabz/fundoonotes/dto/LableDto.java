@@ -1,17 +1,15 @@
-package com.bridgelabz.fundoonotes.DTO;
+package com.bridgelabz.fundoonotes.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
-@AllArgsConstructor 
+@AllArgsConstructor
 @NoArgsConstructor
-public class NoteDto  {
+public class LableDto {
 
 	private String title;
 	private String description;
-	 
-	
+
 }

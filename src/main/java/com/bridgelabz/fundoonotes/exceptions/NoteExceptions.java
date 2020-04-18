@@ -1,4 +1,4 @@
-package com.bridgelabz.fundoonotes.Exceptions;
+package com.bridgelabz.fundoonotes.exceptions;
 
 public class NoteExceptions extends Exception {
 

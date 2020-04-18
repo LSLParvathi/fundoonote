@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
-import com.bridgelabz.fundoonotes.Response.Response;
+import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
+import com.bridgelabz.fundoonotes.response.Response;
 import com.bridgelabz.fundoonotes.service.CollaboratorService;
 
 @RestController

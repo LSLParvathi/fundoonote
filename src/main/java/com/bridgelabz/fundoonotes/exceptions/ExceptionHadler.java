@@ -1,11 +1,11 @@
-package com.bridgelabz.fundoonotes.Exceptions;
+package com.bridgelabz.fundoonotes.exceptions;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import com.bridgelabz.fundoonotes.Response.Response;
+import com.bridgelabz.fundoonotes.response.Response;
 
 /*
  * @ControllerAdvice public class ExceptionHadler {

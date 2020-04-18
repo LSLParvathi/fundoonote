@@ -20,11 +20,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.UpdateNote;
-import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
-import com.bridgelabz.fundoonotes.Response.Response;
+import com.bridgelabz.fundoonotes.dto.NoteDto;
+import com.bridgelabz.fundoonotes.dto.UpdateNote;
+import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
+import com.bridgelabz.fundoonotes.response.Response;
 import com.bridgelabz.fundoonotes.service.NoteService;
 import com.bridgelabz.fundoonotes.utilis.RedisService;
 

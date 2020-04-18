@@ -1,15 +1,17 @@
-package com.bridgelabz.fundoonotes.DTO;
+package com.bridgelabz.fundoonotes.dto;
+
+import org.springframework.stereotype.Indexed;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class UpdateNote {
+@AllArgsConstructor
+@Indexed
+public class SearchNote {
 
-	private String colours;
 	private String title;
 	private String description;
 

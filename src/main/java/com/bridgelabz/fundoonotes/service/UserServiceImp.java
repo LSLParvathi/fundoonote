@@ -11,10 +11,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.bridgelabz.fundoonotes.DTO.Updatepassword;
-import com.bridgelabz.fundoonotes.DTO.UserDTO;
-import com.bridgelabz.fundoonotes.DTO.UserInformation;
-import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
+import com.bridgelabz.fundoonotes.dto.Updatepassword;
+import com.bridgelabz.fundoonotes.dto.UserDto;
+import com.bridgelabz.fundoonotes.dto.UserInformation;
+import com.bridgelabz.fundoonotes.exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.UserRepository;
 import com.bridgelabz.fundoonotes.utilis.JMSoperations;
@@ -39,7 +39,7 @@ public class UserServiceImp implements UserService {
 
 	@Transactional
 	@Override
-	public User register(UserDTO userdto) throws IOException {
+	public User register(UserDto userdto) throws IOException {
 		User user = new User();
 		BeanUtils.copyProperties(userdto, user);
 		if (userrepository.getUserByMail(user.getEmail()) != null) {

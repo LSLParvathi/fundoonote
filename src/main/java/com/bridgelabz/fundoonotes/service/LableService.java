@@ -4,11 +4,11 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import com.bridgelabz.fundoonotes.DTO.LableDto;
-import com.bridgelabz.fundoonotes.DTO.NoteDto;
-import com.bridgelabz.fundoonotes.DTO.UpdateLable;
-import com.bridgelabz.fundoonotes.Exceptions.LableException;
-import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
+import com.bridgelabz.fundoonotes.dto.LableDto;
+import com.bridgelabz.fundoonotes.dto.NoteDto;
+import com.bridgelabz.fundoonotes.dto.UpdateLable;
+import com.bridgelabz.fundoonotes.exceptions.LableException;
+import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Lable;
 import com.bridgelabz.fundoonotes.model.Note;
 

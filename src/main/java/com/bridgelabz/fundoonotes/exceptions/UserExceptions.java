@@ -1,10 +1,14 @@
-package com.bridgelabz.fundoonotes.Exceptions;
+package com.bridgelabz.fundoonotes.exceptions;
 
-public class LableException extends Exception {
-
+public class UserExceptions extends RuntimeException {
 	private Object data;
 	private int status;
 	private String message;
+
+	public UserExceptions(int status, String message) { 
+		this.status = status;
+		this.message = message;
+	}
 
 	public Object getData() {
 		return data;
@@ -30,18 +34,15 @@ public class LableException extends Exception {
 		this.message = message;
 	}
 
-	public LableException(int status, String message) {
-		this.status = status;
-		this.message = message;
-	}
+	public UserExceptions(Object data, int status, String message) {
 
-	public LableException(Object data, int status, String message) {
 		this.data = data;
 		this.status = status;
 		this.message = message;
 	}
 
-	public LableException() {
+	public UserExceptions() {
+
 	}
 
 }
