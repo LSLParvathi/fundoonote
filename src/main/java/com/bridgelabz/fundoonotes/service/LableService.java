@@ -16,14 +16,14 @@ public interface LableService {
 
 	List<Lable> getallLables();
 
-	Lable createLable(@Valid NoteDto notedto, String token) throws LableException;
+	Lable createLable(@Valid LableDto labledto, String token) throws LableException;
 
-	Lable updateLables(UpdateLable updatelable, Long id) throws LableException;
+	Lable updateLables(UpdateLable updatelable, Long id,String token) throws LableException;
 
-	void deleteLables(Long id) throws LableException;
+	void deleteLables(Long id,String token) throws LableException;
 
 	Note AddLableToNote(String token, Long note_id, Long lable_id) throws NoteExceptions, LableException;
 
-	void deleteLablesFromNote(Long note_id, Long lable_id) throws NoteExceptions, LableException;
+	void deleteLablesFromNote(Long note_id, Long lable_id,String token) throws NoteExceptions, LableException;
 
 }

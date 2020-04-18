@@ -6,13 +6,12 @@ import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 
-public interface CollaboratorService 
-{
+public interface CollaboratorService {
 
-	Note AddCol(String email, Long id, String token) throws NoteExceptions; 
+	Note AddCol(String email, Long note_id, String token) throws NoteExceptions;
 
-	void delCollaborator(String email, String token, Long id) throws NoteExceptions;
+	void delCollaborator(String token, Long note_id) throws NoteExceptions;
 
-	List<User> getAllColl(String token, Long id) throws NoteExceptions;
- 
+	List<User> getAllColl(String token) throws NoteExceptions;
+
 }

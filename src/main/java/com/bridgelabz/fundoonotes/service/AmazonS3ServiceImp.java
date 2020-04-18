@@ -45,7 +45,7 @@ public class AmazonS3ServiceImp implements AmazonS3Service {
 	@Async
 	public void uploadFileToS3Bucket(MultipartFile multipartFile, boolean enablePublicReadAccess, String token) {
 		Long id = ope.parseJWT(token);
-		User user = userrepository.get(id).orElseThrow(() -> new UserExceptions(404, env.getProperty("notexist")));
+		User user = userrepository.getUserById(id).orElseThrow(() -> new UserExceptions(404, env.getProperty("notexist")));
 
 		String fileName = multipartFile.getOriginalFilename();
 		user.setProfile(fileName);
@@ -62,7 +62,7 @@ public class AmazonS3ServiceImp implements AmazonS3Service {
 			}
 			this.amazonS3.putObject(putObjectRequest);
 			file.delete();
-			userrepository.save(user);
+			userrepository.saveUser(user);
 		} catch (IOException ex) {
 			System.out.println("there is some error");
 		}
@@ -71,10 +71,10 @@ public class AmazonS3ServiceImp implements AmazonS3Service {
 	@Async
 	public void deleteFileFromS3Bucket(String fileName, String token) {
 		Long id = ope.parseJWT(token);
-		User user = userrepository.get(id).orElseThrow(() -> new UserExceptions(404, env.getProperty("notexist")));
+		User user = userrepository.getUserById(id).orElseThrow(() -> new UserExceptions(404, env.getProperty("notexist")));
 		user.setProfile("null");
 		amazonS3.deleteObject(new DeleteObjectRequest(awsS3AudioBucket, fileName));
-		userrepository.save(user);
+		userrepository.saveUser(user);
 
 	}
 

@@ -14,6 +14,9 @@ public class Response {
 	private Object data;
 	private int status;
 	private String message;
+	private String token;
+	
+	
 
 	public Response(int status, String message) {
 		this.status = status;
@@ -39,5 +42,12 @@ public class Response {
 
 	public Response(String user, String urlPath, int i, String property) {
  	}
+
+	public Response(Object data, String message, String token) {
+		super();
+		this.data = data;
+		this.message = message;
+		this.token = token;
+	}
 
 }

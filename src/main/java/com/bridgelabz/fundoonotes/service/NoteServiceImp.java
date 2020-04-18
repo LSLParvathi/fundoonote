@@ -1,9 +1,7 @@
 package com.bridgelabz.fundoonotes.service;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.bridgelabz.fundoonotes.DTO.NoteDto;
 import com.bridgelabz.fundoonotes.DTO.UpdateNote;
 import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
+import com.bridgelabz.fundoonotes.Exceptions.UserExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.model.User;
 import com.bridgelabz.fundoonotes.repository.NoteRepository;
@@ -30,87 +29,76 @@ public class NoteServiceImp implements NoteService {
 	@Autowired
 	private JWToperations ope;
 	@Autowired
-	private NoteService noteservice;
-	@Autowired
-	private UserService userservice;
-	@Autowired
 	private Environment env;
-	@Autowired
-	private ElasticSearchService elasticsearchservice;
 
+	/*
+	 * @Autowired private ElasticSearchService elasticsearchservice;
+	 */
 	@Transactional
 	@Override
 	public Note createNote(String token, NoteDto notedto) throws NoteExceptions {
 		Note note = new Note();
-		String title = notedto.getTitle();
 		Long id = ope.parseJWT(token);
-		User user = userservice.getUserById(id);
-		boolean Title = noterepository.getNoteByTitle(title).isPresent();
-		if (Title == true) 
-			throw new NoteExceptions(404, env.getProperty("exists"));
-			BeanUtils.copyProperties(notedto, note);
-			note.setArchive(false);
-			note.setColours("black");
-			note.setRemindme(LocalDateTime.now());
-			note.setPin(true);
-			note.setTrash(false);
-			user.getNote().add(note);
-			userrepository.save(user);
-			try {
-				elasticsearchservice.createNote(note);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			return note;
-		}
-	
+		User user = userrepository.getUserById(id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
+		BeanUtils.copyProperties(notedto, note);
+		note.setColours("black");
+		note.setRemindme(LocalDateTime.now());
+		user.getNote().add(note);
+		userrepository.saveUser(user);
+		/*
+		 * try { elasticsearchservice.createNote(note); } catch (Exception e) {
+		 * e.printStackTrace(); }
+		 */
+		return note;
+	}
 
 	@Transactional
 	@Override
-	public List<Note> getAllNotes() throws NoteExceptions {
-		List<Note> note = noterepository.getAllNotes();
-		if (note == null) {
+	public List<Note> getAllNotes(String token) throws NoteExceptions {
+		Long id = ope.parseJWT(token);
+		List<Note> note = noterepository.getAllNotesByUserId(id);
+		if (note == null)
 			throw new NoteExceptions(404, env.getProperty("nodata"));
-		} else {
-			return note;
-		}
+		return note;
 	}
 
 	@Transactional
 	@Override
-	public Note getNoteById(Long note_id) throws NoteExceptions {
-		Note note = noterepository.getbyId(note_id)
+	public Note getNoteById(Long note_id, String token) throws NoteExceptions {
+		Long user_id = ope.parseJWT(token);
+		Note note = noterepository.getNoteById(note_id, user_id)
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
-		System.out.println(note);
-		return note;
+ 		return note;
 	}
 
 	@Transactional
 	@Override
-	public Note updatenote(Long note_id, UpdateNote updatenote) throws NoteExceptions  {
-		Note note = getNoteById(note_id);
-		List<Note> notes = noterepository.getAllNotes();
-		Note updateNote = (Note) notes.stream().filter(upnote -> upnote.getNote_id().equals(note_id))
-				.collect(Collectors.toList());
-		// BeanUtils.copyProperties(updatenote, note);
+	public Note updatenote(Long note_id, UpdateNote updatenote, String token) throws NoteExceptions {
+		Long id = ope.parseJWT(token);
+		List<Note> notes = noterepository.getAllNotesByUserId(id);
+		if (notes == null)
+			throw new NoteExceptions(404, env.getProperty("nodata"));
+		Note note = notes.stream().filter(upnote -> upnote.getNote_id().equals(note_id)).findAny()
+				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
+		BeanUtils.copyProperties(updatenote, note);
 		noterepository.saveNote(note);
-		try {
-			elasticsearchservice.upDateNote(note);
-		} catch (Exception e) { 
-			e.printStackTrace();
-		}
+		/*
+		 * try { elasticsearchservice.upDateNote(note); } catch (Exception e) {
+		 * e.printStackTrace(); }
+		 */
 		return note;
 	}
 
 	@Transactional
 	@Override
-	public Note Archive(Long note_id) throws NoteExceptions {
-		Note note = getNoteById(note_id);
-		boolean s1 = note.isArchive();
-		boolean s2 = note.isPin();
-		if (s1 == true) {
+	public Note Archive(Long note_id, String token) throws NoteExceptions {
+		Long user_id = ope.parseJWT(token);
+		Note note = noterepository.getNoteById(note_id, user_id)
+				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
+		if (note.isArchive()) {
 			note.setArchive(false);
-		} else if (s1 == true && s2 == true) {
+		} else if (note.isArchive() && note.isPin()) {
 			note.setArchive(false);
 		} else {
 			note.setArchive(true);
@@ -121,36 +109,40 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public Note Pinned(Long note_id) throws NoteExceptions {
-		Note note = getNoteById(note_id);
-		boolean s = note.isPin();
-		if (s == true) {
+	public Note Pinned(Long note_id, String token) throws NoteExceptions {
+		Long user_id = ope.parseJWT(token);
+		Note note = noterepository.getNoteById(note_id, user_id)
+				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
+
+		if (note.isPin()) {
 			note.setPin(false);
-		} else {
-			note.setPin(true);
 		}
+		note.setPin(true);
 		return note;
 	}
 
 	@Transactional
 	@Override
-	public void deleteNote(Long note_id) throws NoteExceptions {
-		Note note = getNoteById(note_id);
+	public void deleteNote(Long note_id, String token) throws NoteExceptions {
+		Long user_id = ope.parseJWT(token);
+		Note note = noterepository.getNoteById(note_id, user_id)
+				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		note.setTrash(true);
 		noterepository.saveNote(note);
 		noterepository.deletenote(note);
-		try {
-			elasticsearchservice.deleteNote(String.valueOf(note_id));
-		} catch (IOException e) { 
-			e.printStackTrace();
-		}
+		/*
+		 * try { elasticsearchservice.deleteNote(String.valueOf(note_id)); } catch
+		 * (IOException e) { e.printStackTrace(); }
+		 */
 
 	}
 
 	@Transactional
 	@Override
-	public Note remindMe(Long note_id, LocalDateTime remind) throws NoteExceptions {
-		Note note = getNoteById(note_id);
+	public Note remindMe(Long note_id, LocalDateTime remind, String token) throws NoteExceptions {
+		Long user_id = ope.parseJWT(token);
+		Note note = noterepository.getNoteById(note_id, user_id)
+				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		note.setRemindme(remind);
 		noterepository.saveNote(note);
 		return note;
@@ -158,18 +150,12 @@ public class NoteServiceImp implements NoteService {
 
 	@Transactional
 	@Override
-	public void deleteRem(Long note_id) throws NoteExceptions {
-		Note note = getNoteById(note_id);
+	public void deleteRem(Long note_id, String token) throws NoteExceptions {
+		Long user_id = ope.parseJWT(token);
+		Note note = noterepository.getNoteById(note_id, user_id)
+				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		note.setRemindme(LocalDateTime.now());
 		noterepository.saveNote(note);
 	}
-	
-	@Transactional
-	@Override
-	public List<Note> getNotesByTitleAndDescription(String text) throws NoteExceptions {
-		List<Note> note =  elasticsearchservice.getNoteByTitleAndDescription(text);
-		return note;
-	}
-
 
 }

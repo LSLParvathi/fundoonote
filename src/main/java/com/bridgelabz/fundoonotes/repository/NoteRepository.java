@@ -20,25 +20,7 @@ public class NoteRepository {
 	public void saveNote(Note note) {
 		Session currentsession = entitymanager.unwrap(Session.class);
 		currentsession.save(note);
-	}
 
-	public List<Note> getAllNotes() {
-		Session currentsession = entitymanager.unwrap(Session.class);
-		Query query = currentsession.createQuery("from Note");
-		List<Note> note = query.getResultList();
-		return note;
-	}
-
-	public Optional<Note> getbyId(Long note_id) {
-		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from Note where  note_id=:note_id").setParameter("note_id", note_id)
-				.uniqueResultOptional();
-	}
-
-	public Optional<Note> getNoteByTitle(String title) {
-		Session currentsession = entitymanager.unwrap(Session.class);
-		return currentsession.createQuery("from Note where  title=:title").setParameter("title", title)
-				.uniqueResultOptional();
 	}
 
 	public void deletenote(Note note) {
@@ -47,13 +29,17 @@ public class NoteRepository {
 
 	}
 
-	public Note getnotebyId(Long note_id) {
+	public List<Note> getAllNotesByUserId(Long id) {
 		Session currentsession = entitymanager.unwrap(Session.class);
-		Query query = currentsession.createQuery("from Note where  note_id=:note_id");
-		query.setParameter("note_id", note_id);
-		Note note = (Note) query.getResultList();
+		Query query = currentsession.createQuery("from Note where user_id=:id").setParameter("user_id", id);
+		List<Note> note = query.getResultList();
 		return note;
 	}
 
-	
+	public Optional<Note> getNoteById(Long note_id, Long user_id) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		return currentsession.createQuery("from Note where  note_id=:note_id and user_id=:user_id")
+				.setParameter("note_id", note_id).setParameter("user_id", user_id).uniqueResultOptional();
+	}
+
 }

@@ -29,35 +29,34 @@ public class CollaboratorController {
 	@Autowired
 	private Environment env;
 
-
-	@PostMapping("/addCollaborator/{id}")
+	@PostMapping("/addCollaborator/{note_id}")
 	public ResponseEntity<Response> AddCollaborator(@RequestHeader("token") String token,
-			@RequestParam("email") String email, @PathVariable Long id,BindingResult result) throws NoteExceptions {
+			@RequestParam("email") String email, @PathVariable Long note_id, BindingResult result)
+			throws NoteExceptions {
 		if (result.hasErrors()) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response(result.getAllErrors()));} 
-		Note note = collaboratorservice.AddCol(email, id, token);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 201,env.getProperty("coluser") ));
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response(result.getAllErrors()));
+		}
+		Note note = collaboratorservice.AddCol(email, note_id, token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 201, env.getProperty("coluser")));
 
 	}
 
-	@DeleteMapping("/deletecollaborator/{id}")
-	public ResponseEntity<Response> DelCollaborator(@RequestHeader("token") String token,
-			@RequestParam("email") String email, @PathVariable Long id,BindingResult result) throws NoteExceptions {
+	@DeleteMapping("/deletecollaborator/{note_id}")
+	public ResponseEntity<Response> DelCollaborator(@RequestHeader("token") String token, @PathVariable Long note_id,
+			BindingResult result) throws NoteExceptions {
 		if (result.hasErrors()) {
-			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response(result.getAllErrors()));}
-	
-		collaboratorservice.delCollaborator(email, token, id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED)
-				.body(new Response(204,env.getProperty("delcoluser")));
+			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response(result.getAllErrors()));
+		}
+
+		collaboratorservice.delCollaborator(token, note_id);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204, env.getProperty("delcoluser")));
 
 	}
 
-	@GetMapping("/getallCollaborators/{id}")
-	public ResponseEntity<Response> GetAllCollaborators(@PathVariable Long id,
-			@RequestHeader("token") String token) throws NoteExceptions {
-		List<User> coluser = collaboratorservice.getAllColl(token, id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED)
-				.body(new Response(coluser, 200, env.getProperty("list")));
+	@GetMapping("/getallCollaborators")
+	public ResponseEntity<Response> GetAllCollaborators(@RequestHeader("token") String token) throws NoteExceptions {
+		List<User> coluser = collaboratorservice.getAllColl(token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(coluser, 200, env.getProperty("list")));
 
 	}
 

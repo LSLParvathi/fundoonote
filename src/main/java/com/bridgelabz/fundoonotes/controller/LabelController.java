@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.bridgelabz.fundoonotes.DTO.NoteDto;
+import com.bridgelabz.fundoonotes.DTO.LableDto;
 import com.bridgelabz.fundoonotes.DTO.UpdateLable;
 import com.bridgelabz.fundoonotes.Exceptions.LableException;
 import com.bridgelabz.fundoonotes.Exceptions.NoteExceptions;
@@ -30,21 +31,18 @@ public class LabelController {
 	@Autowired
 	private Environment env;
 
-
-	@PostMapping("/createlable/{token}")
-	public ResponseEntity<Response> createLable(@PathVariable("token") String token, @RequestBody NoteDto notedto)
+	@PostMapping("/createlable")
+	public ResponseEntity<Response> addLable(@RequestHeader("token") String token, @RequestBody LableDto labledto)
 			throws LableException {
-		Lable lable = lableservice.createLable(notedto, token);
-		return ResponseEntity.status(HttpStatus.ACCEPTED)
-				.body(new Response(lable, 201,env.getProperty("newlable")));
+		Lable lable = lableservice.createLable(labledto, token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(lable, 201, env.getProperty("newlable")));
 	}
 
-	@PostMapping("/AddlableTonNote/{token}/{note_id}/{lable_id}")
-	public ResponseEntity<Response> AddLableToNote(@PathVariable("token") String token, @PathVariable Long note_id,
+	@PostMapping("/AddlableTonNote/{note_id}/{lable_id}")
+	public ResponseEntity<Response> AddLableToNote(@RequestHeader("token") String token, @PathVariable Long note_id,
 			@PathVariable Long lable_id) throws NoteExceptions, LableException {
 		Note note = lableservice.AddLableToNote(token, note_id, lable_id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED)
-				.body(new Response(note, 200,env.getProperty("addlable")));
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200, env.getProperty("addlable")));
 	}
 
 	@GetMapping("/getlables")
@@ -54,26 +52,21 @@ public class LabelController {
 
 	}
 
-	@PutMapping("/updateLable/{id}")
-	public ResponseEntity<Response> Updatelable(@PathVariable Long id, @RequestBody UpdateLable updatelable)
-			throws LableException {
-		Lable lable = lableservice.updateLables(updatelable, id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(lable, 200,env.getProperty("update")));
+	 
+
+	@DeleteMapping("/deletelablefromNote/{note_id}/{lable_id}")
+	public ResponseEntity<Response> deleteLablefromNote(@PathVariable Long note_id, @PathVariable Long lable_id,
+			@RequestHeader("token") String token) throws NoteExceptions, LableException {
+		lableservice.deleteLablesFromNote(note_id, lable_id, token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204, env.getProperty("deletelable")));
 
 	}
 
 	@DeleteMapping("/deletelable/{id}")
-	public ResponseEntity<Response> deletelable(@PathVariable Long id) throws LableException {
-		lableservice.deleteLables(id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204,env.getProperty("deletelable")));
-
-	}
-
-	@DeleteMapping("/deletelablefromNote/{note_id}/{lable_id}")
-	public ResponseEntity<Response> deleteLablefromNote(@PathVariable Long note_id, @PathVariable Long lable_id)
-			throws NoteExceptions, LableException {
-		lableservice.deleteLablesFromNote(note_id, lable_id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204,env.getProperty("deletelable")));
+	public ResponseEntity<Response> deletelable(@PathVariable Long id, @RequestHeader("token") String token)
+			throws LableException {
+		lableservice.deleteLables(id, token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204, env.getProperty("deletelable")));
 
 	}
 }

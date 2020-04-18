@@ -3,7 +3,10 @@ package com.bridgelabz.fundoonotes.controller;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import javax.ws.rs.QueryParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,19 +29,19 @@ import com.bridgelabz.fundoonotes.service.NoteService;
 import com.bridgelabz.fundoonotes.utilis.RedisService;
 
 @RestController
+@PropertySource("classpath:message.properties")
+
 public class NoteController {
 
 	@Autowired
 	private NoteService noteservice;
-
 	@Autowired
 	private RedisService redisservice;
-
 	@Autowired
 	private Environment env;
 
 	@PostMapping("/createnote")
-	public ResponseEntity<Response> AddNote(@RequestHeader("token") String token, @RequestBody NoteDto notedto,
+	public ResponseEntity<Response> createNote(@RequestHeader("token") String token, @RequestBody NoteDto notedto,
 			BindingResult result) throws NoteExceptions {
 		if (result.hasErrors()) {
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new Response(result.getAllErrors()));
@@ -49,9 +52,16 @@ public class NoteController {
 
 	}
 
+	@PutMapping("/updateNote/{note_id}")
+	public ResponseEntity<Response> updateNote(@PathVariable Long note_id, @RequestBody UpdateNote updatenote,
+			@RequestHeader("token") String token) throws NoteExceptions {
+		Note note = noteservice.updatenote(note_id, updatenote, token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200, env.getProperty("update")));
+	}
+
 	@GetMapping("/getall")
-	public ResponseEntity<Response> getallNotes(@RequestHeader("token") String token) throws NoteExceptions {
-		List<Note> note = noteservice.getAllNotes();
+	public ResponseEntity<Response> getNotes(@RequestHeader("token") String token) throws NoteExceptions {
+		List<Note> note = noteservice.getAllNotes(token);
 		if (redisservice.getToken(token) == false)
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
 					.body(new Response(200, "No such token in the database"));
@@ -59,66 +69,71 @@ public class NoteController {
 	}
 
 	@GetMapping("/get/{note_id}")
-	public ResponseEntity<Response> get(@PathVariable Long note_id, @RequestHeader("token") String token)
+	public ResponseEntity<Response> getNoteById(@PathVariable Long note_id, @RequestHeader("token") String token)
 			throws NoteExceptions {
 		Note note = new Note();
-		note = noteservice.getNoteById(note_id);
+		note = noteservice.getNoteById(note_id, token);
 		if (redisservice.getToken(token) == false)
 			return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
 					.body(new Response(200, "No such token in the database"));
-
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200, env.getProperty("list")));
 	}
 
-	@PutMapping("/updateNote/{note_id}")
-	public ResponseEntity<Response> updateNote(@PathVariable Long note_id, @RequestBody UpdateNote updatenote,
-			@RequestHeader("token") String token) throws NoteExceptions {
-		Note note = noteservice.updatenote(note_id, updatenote);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200, env.getProperty("update")));
+	@DeleteMapping("/delete/{note_id}")
+	public ResponseEntity<Response> deleteNote(@PathVariable Long note_id, @RequestHeader("token") String token)
+			throws NoteExceptions {
+		noteservice.deleteNote(note_id, token);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204, env.getProperty("deletenote")));
 	}
 
 	@PutMapping("/archive/{note_id}")
-	public ResponseEntity<Response> IsArchive(@PathVariable Long note_id, @RequestHeader("token") String token)
+	public ResponseEntity<Response> archive(@PathVariable Long note_id, @RequestHeader("token") String token)
 			throws NoteExceptions {
-		Note note = noteservice.Archive(note_id);
+		Note note = noteservice.Archive(note_id, token);
 		return ResponseEntity.status(HttpStatus.ACCEPTED)
 				.body(new Response(note, 200, env.getProperty("notearchived")));
 	}
 
 	@PutMapping("/pin/{note_id}")
-	public ResponseEntity<Response> Ispinned(@PathVariable Long note_id, @RequestHeader("token") String token)
+	public ResponseEntity<Response> pin(@PathVariable Long note_id, @RequestHeader("token") String token)
 			throws NoteExceptions {
-		Note note = noteservice.Pinned(note_id);
+		Note note = noteservice.Pinned(note_id, token);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200, env.getProperty("notepinned")));
-	}
-
-	@DeleteMapping("/delete/{note_id}")
-	public ResponseEntity<Response> delete(@PathVariable Long note_id, @RequestHeader("token") String token)
-			throws NoteExceptions {
-		noteservice.deleteNote(note_id);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204, env.getProperty("deletenote")));
 	}
 
 	@PostMapping("/EditReminder/{note_id}")
 	public ResponseEntity<Response> EditRem(@PathVariable Long note_id, @RequestBody LocalDateTime remind,
 			@RequestHeader("token") String token) throws NoteExceptions {
-		Note note = noteservice.remindMe(note_id, remind);
+		Note note = noteservice.remindMe(note_id, remind, token);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200, env.getProperty("notepinned")));
 	}
 
 	@DeleteMapping("deletereminder/{note_id}")
 	public ResponseEntity<Response> DeleteRem(@PathVariable Long note_id, @RequestHeader("token") String token)
 			throws NoteExceptions {
-		noteservice.deleteRem(note_id);
+		noteservice.deleteRem(note_id, token);
 		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(204, env.getProperty("deletereminder")));
 
 	}
-	
-	@GetMapping("/GetAllNotesByTitleAndDescription/{text}")
-	public ResponseEntity<Response> getNotesBYTitleAndDescription(@PathVariable String text,
-			@RequestHeader("token") String token) throws Exception {
-		List<Note> note = noteservice.getNotesByTitleAndDescription(text);
-		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200, env.getProperty("list")));
-	}
+
+	/*
+	 * @GetMapping("/GetAllNotesByTitleAndDescription/{text}") public
+	 * ResponseEntity<Response> getNotesBYTitleAndDescription(@PathVariable String
+	 * text,
+	 * 
+	 * @RequestHeader("token") String token) throws Exception { List<Note> note =
+	 * noteservice.getNotesByTitleAndDescription(text); return
+	 * ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200,
+	 * env.getProperty("list"))); }
+	 */
+
+	/*
+	 * @GetMapping("/getall") public List<Note> getallNotes(@RequestHeader("token")
+	 * String token,@QueryParam("note_id") Long note_id) throws NoteExceptions {
+	 * return note_id !=null ? noteservice.getNoteByNote_id(note_id) :
+	 * noteservice.getAllNotes();
+	 * 
+	 * }
+	 */
 
 }

@@ -48,4 +48,11 @@ public class LableRepository {
 		Session currentsession = entitymanager.unwrap(Session.class);
 		currentsession.delete(lable);
 	}
+
+	public  List<Lable> getLableByUserId(Long user_id) {
+		Session currentsession = entitymanager.unwrap(Session.class);
+		Query query = currentsession.createQuery("from Lable where user_id=:user_id").setParameter("user_id", user_id);
+ 		List<Lable> lable = query.getResultList();
+		return lable;
+	}
 }

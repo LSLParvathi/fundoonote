@@ -5,8 +5,7 @@ public class UserExceptions extends RuntimeException {
 	private int status;
 	private String message;
 
-	public UserExceptions(int status, String message) {
-		super();
+	public UserExceptions(int status, String message) { 
 		this.status = status;
 		this.message = message;
 	}

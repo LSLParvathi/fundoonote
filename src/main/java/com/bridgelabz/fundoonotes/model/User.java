@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -19,6 +20,7 @@ import javax.validation.constraints.Size;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
  
@@ -32,21 +34,16 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	@NotNull
-	//(message = "firstname is required")
-	private String firstname;
+ 	private String firstname;
 	@NotNull
-	//(message = "lastname is required")
-	private String lastname;
+ 	private String lastname;
 	@NotNull
-	//(message = "mobilenumber is required")
-	//@Size(min = 10, max = 10)
-	private String mobilenumber;
+ 	private String mobilenumber;
 	@Email
-	//(message = "email is required")
-	private String email;
+ 	private String email;
 	@NotNull
-	//(message = "password is required")
-	private String password;
+	@JsonIgnore
+ 	private String password;
 
 	private Boolean verify = false;
 
@@ -159,4 +156,14 @@ public class User {
 		this.lable = lable;
 	}
 
+	@ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH }, fetch = FetchType.LAZY)
+	private List<User> collaborator;
+
+	public List<User> getCollaborator() {
+		return collaborator;
+	}
+
+	public void setCollaborator(List<User> collaborator) {
+		this.collaborator = collaborator;
+	}
 }

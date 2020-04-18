@@ -32,8 +32,8 @@ public class Note {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long note_id;
 	private boolean archive = false;
-	private boolean pin;
-	private boolean trash;
+	private boolean pin=false;
+	private boolean trash=false;
 	private String colours;
 	private LocalDateTime remindme;
 	private String title;

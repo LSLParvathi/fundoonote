@@ -10,24 +10,22 @@ import com.bridgelabz.fundoonotes.model.Note;
 
 public interface NoteService {
 
-	List<Note> getAllNotes() throws NoteExceptions;
-
 	Note createNote(String token, NoteDto notedto) throws NoteExceptions;
 
-	Note getNoteById(Long note_id) throws NoteExceptions;
+	Note getNoteById(Long note_id, String token) throws NoteExceptions;
 
-	Note updatenote(Long note_id, UpdateNote updatenote) throws NoteExceptions;
+	Note updatenote(Long note_id, UpdateNote updatenote, String token) throws NoteExceptions;
 
-	Note Archive(Long note_id) throws NoteExceptions;
+	Note Archive(Long note_id, String token) throws NoteExceptions;
 
-	Note Pinned(Long note_id) throws NoteExceptions;
+	Note Pinned(Long note_id, String token) throws NoteExceptions;
 
-	void deleteNote(Long note_id) throws NoteExceptions;
+	void deleteNote(Long note_id, String token) throws NoteExceptions;
 
-	Note remindMe(Long note_id, LocalDateTime remind) throws NoteExceptions;
+	Note remindMe(Long note_id, LocalDateTime remind, String token) throws NoteExceptions;
 
-	void deleteRem(Long note_id) throws NoteExceptions;
-	
-	List<Note> getNotesByTitleAndDescription(String text) throws NoteExceptions, Exception;
+	void deleteRem(Long note_id, String token) throws NoteExceptions;
+
+	List<Note> getAllNotes(String token) throws NoteExceptions;
 
 }
