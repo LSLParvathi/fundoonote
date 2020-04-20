@@ -42,7 +42,7 @@ public class NoteServiceImp implements NoteService {
 		User user = userrepository.getUserById(id)
 				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		BeanUtils.copyProperties(notedto, note);
-		note.setColours("black"); 
+		note.setColours("black");
 		user.getNote().add(note);
 		userrepository.saveUser(user);
 		/*
@@ -56,6 +56,8 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public List<Note> getAllNotes(String token) throws NoteExceptions {
 		Long id = ope.parseJWT(token);
+		User user = userrepository.getUserById(id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		List<Note> note = noterepository.getAllNotesByUserId(id);
 		if (note == null)
 			throw new NoteExceptions(404, env.getProperty("nodata"));
@@ -66,15 +68,19 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public Note getNoteById(Long note_id, String token) throws NoteExceptions {
 		Long user_id = ope.parseJWT(token);
+		User user = userrepository.getUserById(user_id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		Note note = noterepository.getNoteById(note_id, user_id)
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
- 		return note;
+		return note;
 	}
 
 	@Transactional
 	@Override
 	public Note updatenote(Long note_id, UpdateNote updatenote, String token) throws NoteExceptions {
 		Long id = ope.parseJWT(token);
+		User user = userrepository.getUserById(id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		List<Note> notes = noterepository.getAllNotesByUserId(id);
 		if (notes == null)
 			throw new NoteExceptions(404, env.getProperty("nodata"));
@@ -93,6 +99,8 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public Note Archive(Long note_id, String token) throws NoteExceptions {
 		Long user_id = ope.parseJWT(token);
+		User user = userrepository.getUserById(user_id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		Note note = noterepository.getNoteById(note_id, user_id)
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		if (note.isArchive()) {
@@ -110,9 +118,10 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public Note Pinned(Long note_id, String token) throws NoteExceptions {
 		Long user_id = ope.parseJWT(token);
+		User user = userrepository.getUserById(user_id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		Note note = noterepository.getNoteById(note_id, user_id)
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
-
 		if (note.isPin()) {
 			note.setPin(false);
 		}
@@ -124,6 +133,8 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public void deleteNote(Long note_id, String token) throws NoteExceptions {
 		Long user_id = ope.parseJWT(token);
+		User user = userrepository.getUserById(user_id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		Note note = noterepository.getNoteById(note_id, user_id)
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		note.setTrash(true);
@@ -140,6 +151,8 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public Note remindMe(Long note_id, LocalDateTime remind, String token) throws NoteExceptions {
 		Long user_id = ope.parseJWT(token);
+		User user = userrepository.getUserById(user_id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		Note note = noterepository.getNoteById(note_id, user_id)
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		note.setRemindme(remind);
@@ -151,6 +164,8 @@ public class NoteServiceImp implements NoteService {
 	@Override
 	public void deleteRem(Long note_id, String token) throws NoteExceptions {
 		Long user_id = ope.parseJWT(token);
+		User user = userrepository.getUserById(user_id)
+				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		Note note = noterepository.getNoteById(note_id, user_id)
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		note.setRemindme(LocalDateTime.now());

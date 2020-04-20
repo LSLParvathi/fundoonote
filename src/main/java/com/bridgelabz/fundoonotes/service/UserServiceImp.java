@@ -33,7 +33,6 @@ public class UserServiceImp implements UserService {
 	private JMSoperations ope1;
 	@Autowired
 	private Environment env;
-	BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 
 	private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UserServiceImp.class);
 
@@ -41,11 +40,11 @@ public class UserServiceImp implements UserService {
 	@Override
 	public User register(UserDto userdto) throws IOException {
 		User user = new User();
-		BeanUtils.copyProperties(userdto, user);
-		if (userrepository.getUserByMail(user.getEmail()) != null) {
-			System.out.println("user is: " + user);
+		if (userrepository.getUserByMail(userdto.getEmail()).isPresent()) {
 			throw new UserExceptions(404, env.getProperty("exists"));
 		}
+		BeanUtils.copyProperties(userdto, user);
+		BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 		user.setPassword(by.encode(user.getPassword()));
 		user.setCreatedate(LocalDateTime.now());
 		user.setUpdatedate(LocalDateTime.now());
@@ -63,7 +62,8 @@ public class UserServiceImp implements UserService {
 	public User userLogin(UserInformation userinformation) {
 		User user = userrepository.getUserByMail(userinformation.getEmail())
 				.orElseThrow(() -> new UserExceptions(404, env.getProperty("notexist")));
-		if (user.getVerify() == true && by.matches(userinformation.getPassword(), user.getPassword())) {
+		BCryptPasswordEncoder by = new BCryptPasswordEncoder();
+		if (user.getVerify()== true && by.matches(userinformation.getPassword(), user.getPassword())==true) {
 			return user;
 		}
 		throw new UserExceptions(404, env.getProperty("incorrect"));
@@ -83,6 +83,7 @@ public class UserServiceImp implements UserService {
 	@Transactional
 	@Override
 	public User setNewPassword(Updatepassword updatepassword, String token) {
+		BCryptPasswordEncoder by = new BCryptPasswordEncoder();
 		User user = userrepository.getUserById(ope.parseJWT(token))
 				.orElseThrow(() -> new UserExceptions(404, env.getProperty("nodata")));
 		if (updatepassword.getSetpassword().equals(updatepassword.getConfirmpassword())) {

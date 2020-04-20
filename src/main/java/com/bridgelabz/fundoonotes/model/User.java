@@ -25,8 +25,8 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
  
 @Entity
-@Table(name = "userdetails")
-@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, property = "@id", scope = User.class)
+@Table(name = "userinfo")
+@JsonIdentityInfo(generator = ObjectIdGenerators.IntSequenceGenerator.class, scope = User.class)
 
 public class User {
 
@@ -41,8 +41,7 @@ public class User {
  	private String mobilenumber;
 	@Email
  	private String email;
-	@NotNull
-	@JsonIgnore
+	@NotNull 
  	private String password;
 
 	private Boolean verify = false;
