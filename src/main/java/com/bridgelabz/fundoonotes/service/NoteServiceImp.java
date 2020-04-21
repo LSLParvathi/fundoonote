@@ -30,10 +30,9 @@ public class NoteServiceImp implements NoteService {
 	private JWToperations ope;
 	@Autowired
 	private Environment env;
+	@Autowired
+	private ElasticSearchService elasticsearchservice;
 
-	/*
-	 * @Autowired private ElasticSearchService elasticsearchservice;
-	 */
 	@Transactional
 	@Override
 	public Note createNote(String token, NoteDto notedto) throws NoteExceptions {
@@ -45,10 +44,13 @@ public class NoteServiceImp implements NoteService {
 		note.setColours("black");
 		user.getNote().add(note);
 		userrepository.saveUser(user);
-		/*
-		 * try { elasticsearchservice.createNote(note); } catch (Exception e) {
-		 * e.printStackTrace(); }
-		 */
+
+		try {
+			elasticsearchservice.createNote(note);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return note;
 	}
 
@@ -88,10 +90,13 @@ public class NoteServiceImp implements NoteService {
 				.orElseThrow(() -> new NoteExceptions(404, env.getProperty("notexist")));
 		BeanUtils.copyProperties(updatenote, note);
 		noterepository.saveNote(note);
-		/*
-		 * try { elasticsearchservice.upDateNote(note); } catch (Exception e) {
-		 * e.printStackTrace(); }
-		 */
+
+		try {
+			elasticsearchservice.upDateNote(note);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
 		return note;
 	}
 
@@ -140,10 +145,12 @@ public class NoteServiceImp implements NoteService {
 		note.setTrash(true);
 		noterepository.saveNote(note);
 		noterepository.deletenote(note);
-		/*
-		 * try { elasticsearchservice.deleteNote(String.valueOf(note_id)); } catch
-		 * (IOException e) { e.printStackTrace(); }
-		 */
+
+		try {
+			elasticsearchservice.deleteNote(String.valueOf(note_id));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 	}
 

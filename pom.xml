@@ -23,6 +23,7 @@
 			value="filesystem" />
 		<property name="hibernate.search.default.indexBase"
 			value="./lucene/indexes" />
+		<start-class>com.bridgelabz.fundoonotes.FundoonotesApplication</start-class>
 
 	</properties>
 
@@ -96,8 +97,6 @@
 			<version>2.9.2</version>
 		</dependency>
 
-		<!-- <dependency> <groupId>org.webjars</groupId> <artifactId>bootstrap</artifactId> 
-			<version>3.3.5</version> </dependency> -->
 		<dependency>
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger2</artifactId>
@@ -110,12 +109,9 @@
 			<version>5.3.4.Final</version>
 		</dependency>
 
-		  <!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
-		<!-- <dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-core</artifactId>
-			<version>4.1.6.Final</version>
-		</dependency> -->
+		<!-- https://mvnrepository.com/artifact/org.hibernate/hibernate-core -->
+		<!-- <dependency> <groupId>org.hibernate</groupId> <artifactId>hibernate-core</artifactId> 
+			<version>4.1.6.Final</version> </dependency> -->
 
 		<dependency>
 			<groupId>javax.transaction</groupId>
@@ -145,11 +141,16 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-amqp</artifactId>
 		</dependency>
-
-		<!-- <dependency> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-starter-data-elasticsearch</artifactId> 
-			</dependency> -->
-		<!-- <dependency> <groupId> org.elasticsearch.client</groupId> <artifactId>elasticsearch-rest-high-level-client</artifactId> 
-			</dependency> -->
+		<!-- <dependency> <groupId>net.java.dev.jna</groupId> <artifactId>jna</artifactId> 
+			<scope>runtime</scope> </dependency> -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+		</dependency>
+		<dependency>
+			<groupId> org.elasticsearch.client</groupId>
+			<artifactId>elasticsearch-rest-high-level-client</artifactId>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -160,16 +161,6 @@
 					<artifactId>junit-vintage-engine</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-security</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.security</groupId>

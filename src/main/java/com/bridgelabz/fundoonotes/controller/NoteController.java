@@ -25,6 +25,7 @@ import com.bridgelabz.fundoonotes.dto.UpdateNote;
 import com.bridgelabz.fundoonotes.exceptions.NoteExceptions;
 import com.bridgelabz.fundoonotes.model.Note;
 import com.bridgelabz.fundoonotes.response.Response;
+import com.bridgelabz.fundoonotes.service.ElasticSearchService;
 import com.bridgelabz.fundoonotes.service.NoteService;
 import com.bridgelabz.fundoonotes.utilis.RedisService;
 
@@ -39,6 +40,8 @@ public class NoteController {
 	private RedisService redisservice;
 	@Autowired
 	private Environment env;
+	@Autowired
+	private ElasticSearchService elasticsearchservice;
 
 	@PostMapping("/createnote")
 	public ResponseEntity<Response> createNote(@RequestHeader("token") String token, @RequestBody NoteDto notedto,
@@ -116,16 +119,13 @@ public class NoteController {
 
 	}
 
-	/*
-	 * @GetMapping("/GetAllNotesByTitleAndDescription/{text}") public
-	 * ResponseEntity<Response> getNotesBYTitleAndDescription(@PathVariable String
-	 * text,
-	 * 
-	 * @RequestHeader("token") String token) throws Exception { List<Note> note =
-	 * noteservice.getNotesByTitleAndDescription(text); return
-	 * ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200,
-	 * env.getProperty("list"))); }
-	 */
+	@GetMapping("/GetAllNotesByTitleAndDescription/{text}")
+	public ResponseEntity<Response> getNotesBYTitleAndDescription(@PathVariable String text,
+
+			@RequestHeader("token") String token) throws Exception {
+		List<Note> note =  elasticsearchservice.getNoteByTitleAndDescription(text);
+		return ResponseEntity.status(HttpStatus.ACCEPTED).body(new Response(note, 200, env.getProperty("list")));
+	}
 
 	/*
 	 * @GetMapping("/getall") public List<Note> getallNotes(@RequestHeader("token")
